@@ -1,11 +1,11 @@
 import { Route, Routes } from 'react-router-dom';
-import Header from './header.admin';
-import Footer from './footer.admin';
-import Sidebar from './sidebar.admin';
+import Header from './header.manager';
+import Footer from './footer.manager';
+import Sidebar from './sidebar.manager';
 import SubjectRoutes from '../../../manager/subject/subject.routes';
 import PageNotFound from '../../../error/page-not-found';
 
-function DefaultLayoutAdmin(){
+function DefaultLayoutManager(){
     return(
         <>
             <div>
@@ -24,4 +24,4 @@ function DefaultLayoutAdmin(){
     )
 }
 
-export default DefaultLayoutAdmin;
+export default DefaultLayoutManager;
