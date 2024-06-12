@@ -1,23 +1,16 @@
-
-
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import PageNotFound from './app/error/page-not-found';
+import DefaultLayoutAdmin from './app/shared/layouts/admin/default-layout.admin'
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src="" className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div className='App'>
+        <Routes>
+          <Route path='/*' element={<PageNotFound/>} />
+          <Route path = 'manager/*' element = {< DefaultLayoutAdmin/>} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
