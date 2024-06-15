@@ -14,7 +14,7 @@ function DefaultLayoutManager(){
             <div>
                 <Header/>
                     <Routes>
-                        <Route path="/subject/" element={<SubjectRoutes/>} />
+                        <Route path="/subject/*" element={<SubjectRoutes/>} />
                         <Route path="/*" element={<PageNotFound/>} />
                     </Routes>
                 <Footer/>
