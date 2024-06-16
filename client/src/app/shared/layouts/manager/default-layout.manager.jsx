@@ -4,6 +4,8 @@ import Sidebar from './sidebar.manager';
 import SubjectRoutes from '../../../manager/subject/subject.routes';
 import PageNotFound from '../../../error/page-not-found';
 import DashboardManagerPage from '../../../manager/dashboard/dashboard.manager';
+import QuizRoutes from '../../../manager/quiz/quiz.routes';
+import QuestionRoutes from '../../../manager/question/question.routes';
 
 function DefaultLayoutManager(){
     return(
@@ -16,6 +18,8 @@ function DefaultLayoutManager(){
                         <Routes>
                             <Route path="/dashboard" element={<DashboardManagerPage/>} />
                             <Route path="/subject/*" element={<SubjectRoutes/>} />
+                            <Route path="/quiz/*" element={<QuizRoutes/>} />
+                            <Route path="/question/*" element={<QuestionRoutes/>} />
                             <Route path="/*" element={<PageNotFound/>} />
                         </Routes>
                     </div>
