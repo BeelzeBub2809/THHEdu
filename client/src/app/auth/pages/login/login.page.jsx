@@ -1,7 +1,30 @@
 import React from "react";
 import {link} from '../../../core/constants/link';
+import { AuthService } from "../../../core/services/auth.service";
+import { useNavigate } from 'react-router-dom';
+import { role } from "../../../core/constants/config";
 
 export default function LoginPage() {
+
+    const navigation = useNavigate();
+
+    const onLogin = async (e) => {
+        await AuthService.login()
+            .then((response) => {
+                if (response.success) {
+                    const userRole = AuthService.getRole();
+                    
+                    if ( userRole === role.MANAGER) {
+                      navigation(link.managerDashboard);
+                    }
+
+                    window.location.reload();
+                  } else {
+                    alert('Check your username and password. Then try again.');
+                  }
+            })
+    }
+
     return (
         <div className="container page-wrapper">
             <div className="account-form row justify-content-center">
@@ -33,7 +56,7 @@ export default function LoginPage() {
                                 </div>
                                 <div id="err" className="text-danger mb-3" style = {{display:"none"}}>error</div>
                                 <div className="form-group text-center mb-3">
-                                    <button name="submit" type="submit" value="Submit" className="btn btn-primary btn-block ">Login</button>
+                                    <button name="submit" type="submit" onClick={onLogin} className="btn btn-primary btn-block">Login</button>
                                 </div>
                                 <div className="text-center mb-3">
                                     <h6>Login with Social media</h6>
