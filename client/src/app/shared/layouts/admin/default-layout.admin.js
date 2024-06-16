@@ -1,9 +1,9 @@
 import { Route, Routes } from 'react-router-dom';
 import HeaderAdmin from './HeaderAndSidebar/header.admin';
 import SidebarAdmin from './HeaderAndSidebar/sidebar.admin';
-import DashboardAdmin from './DashBoard/dashboard';
+import DashboardAdmin from '../../../admin/DashBoard/dashboard';
 import PageNotFound from '../../../error/page-not-found';
-import UserManagement from './User/userManage';
+import UserManagement from '../../../admin/user/userManage';
 
 function DefaultLayoutAdmin() {
     return (
