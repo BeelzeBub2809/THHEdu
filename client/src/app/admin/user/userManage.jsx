@@ -35,6 +35,7 @@ export default function UserManagement() {
   const handleCloseModal = () => {
     setShowModal(false)
     setCurrentAction('')
+    setSelectedUser(null)
   }
 
   const handleViewUser = (user) => {
