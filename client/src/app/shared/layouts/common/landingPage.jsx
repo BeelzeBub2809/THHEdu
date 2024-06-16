@@ -3,11 +3,11 @@ import './css/styleLandingPage.css'
 
 export default function LandingPage() {
   return (
-    <div className="container-fluid">
+    <div className="container-fluid" style={{padding : 0}}>
       <header className="header">
         <div className="nav">
           <div className="logo">
-            Quiz <span style={{ color: "rgba(135, 206, 250, 1)" }}>Grad</span>
+          <span style={{ color: "black" }}>Quiz </span> Grad
           </div>
           <nav className="nav-links">
             <a href="#" className="nav-link">
@@ -19,7 +19,7 @@ export default function LandingPage() {
             <a href="#" className="nav-link">
               About us
             </a>
-            <a href="#" className="login-button">
+            <a href="#" className="login-button" style={{textDecoration: 'none'}}>
               Login
             </a>
           </nav>
