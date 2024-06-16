@@ -95,3 +95,18 @@ h2 {
 .mb-3 {
   margin-bottom: 1rem;
 }
+
+
+.modal-backdrop {
+  background-color: rgba(211, 211, 211, 0.5); /* lightgray with some transparency */
+}
+
+.modal-content {
+  background-color: white;
+}
+.avatar{
+  border: solid 1px lightgray;
+  border-radius: 50%;
+  height: fit-content;
+  width: 45%;
+}
