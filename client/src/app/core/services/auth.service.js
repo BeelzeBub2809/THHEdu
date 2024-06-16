@@ -12,7 +12,7 @@ export class AuthService{
             .then((response) => {
                 if(response.success){
                     response.data.roleId = role.MANAGER;
-                    localStorage.setItem(this.userDetail, JSON.stringify(response));
+                    // localStorage.setItem(this.userDetail, JSON.stringify(response));
                 }
                 return response;
             })

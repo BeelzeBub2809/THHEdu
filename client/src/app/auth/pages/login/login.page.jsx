@@ -9,20 +9,23 @@ export default function LoginPage() {
     const navigation = useNavigate();
 
     const onLogin = async (e) => {
-        await AuthService.login()
-            .then((response) => {
-                if (response.success) {
-                    const userRole = AuthService.getRole();
-                    
-                    if ( userRole === role.MANAGER) {
-                      navigation(link.managerDashboard);
-                    }
+        
+        navigation(link.managerDashboard);
 
-                    window.location.reload();
-                  } else {
-                    alert('Check your username and password. Then try again.');
-                  }
-            })
+        // TODO: Active when implement call api in backend
+        // await AuthService.login()
+        //     .then((response) => {
+        //         if (response.success) {
+        //             const userRole = AuthService.getRole();
+                    
+        //             if ( userRole === role.MANAGER) {
+        //               navigation(link.managerDashboard);
+        //             }
+
+        //           } else {
+        //             alert('Check your username and password. Then try again.');
+        //           }
+        //     })
     }
 
     return (
@@ -38,7 +41,7 @@ export default function LoginPage() {
                                 <h2 className="title-head">Login to your <span>Account</span></h2>
                                 <p>Don't have an account? <a href = {link.register} >Create one here</a></p>
                             </div>
-                            <form className="contact-bx" action="login" method="post">
+                            <form className="contact-bx">
                                 <div className="form-group mb-3">
                                     <label>Your Email</label>
                                     <input name="email" type="text" required="" className="form-control" />
