@@ -1,63 +1,83 @@
 import React from "react";
-import {link} from '../../../core/constants/link';
+import { link } from '../../../core/constants/link';
+import '../login/login.pages.css'
 
-export default function RegisterPage(){
+export default function RegisterPage() {
     return (
-        <>
-            <div class="container page-wraper">
-                <div class="account-form row justify-content-center">
-                    <div class="col-md-6 col-lg-5">
-                    <div className="account-head text-center mb-4">
-                        <a href="#"><img src="" /></a>
-                    </div>
-                        <div class="account-container ">
-                            <div class="heading-bx text-center left mb-4">
-                                <h2 class="title-head">Sign Up <span>Now</span></h2>
-                                <p>Login Your Account <a href={link.login}>Click here</a></p>
+        <section className="container">
+            <div className="content-wrapper">
+                <div className="column">
+                    <div className="form-section">
+                        <p className="welcome-text">
+                            Welcome back! <br /> Please Signup to your account.
+                        </p>
+                        <form className="input-group">
+                            <div className="input-label">
+                                <label htmlFor="email" className="input-title">
+                                    Email Address
+                                </label>
+                                <input
+                                    type="email"
+                                    id="email"
+                                    className="input-value"
+                                />
                             </div>
-                            <form class="contact-bx" action="" method="post">
-                                <div class="row">
-                                    <div class="col-lg-12 mb-4">
-                                        <div class="input-group">
-                                            <label class= "col-lg-4">Full Name</label>
-                                            <input class="form-control" name="fullname" id="fullname" type="text" required=""  value=""/>
-                                        </div>
+                            <div className="input-label">
+                                <label htmlFor="password" className="input-title">
+                                    Password
+                                </label>
+                                <input
+                                    type="password"
+                                    id="password"
+                                    className="input-value"
+                                />
+                            </div>
+                            <div className="input-label">
+                                <label htmlFor="password" className="input-title">
+                                    Confirm Password
+                                </label>
+                                <input
+                                    type="password"
+                                    id="password"
+                                    className="input-value"
+                                />
+                            </div>
+                        </form>
+                        <section className="action-section">
+                            <div className="login-options">
+                                <div className="remember-me-section">
+                                    <div className="remember-me">
+                                        <input type="checkbox" className="checkbox" id="rememberMe" />
+                                        <label htmlFor="rememberMe" className="remember-label">
+                                            Remember Me
+                                        </label>
                                     </div>
-                                    <div class="col-lg-12 mb-4">
-                                        <div class="input-group">
-                                            <label class= "col-lg-4">Email Address</label>
-                                            <input class="form-control" name="email" id="email" type="email" required=""  value=""/>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-12 mb-4">
-                                        <div class="input-group"> 
-                                            <label class= "col-lg-4">Password</label>
-                                            <input class="form-control col-lg-8" id="password" name="password" type="password" required="" value=""/>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-12 mb-4">
-                                        <div class="input-group">
-                                            <label class= "col-lg-4">Confirm password</label>
-                                            <input class="form-control" name="confPassword" type="password" required="" value=""/>
-                                        </div>
-                                    </div>
-                                    <div id="err" className="text-danger mb-3" style = {{display:"none"}}>error</div>
-                                    <div class="form-group text-center mb-3">
-                                        <button name="submit" type="submit" value="Submit" class="btn btn-primary btn-block ">Sign Up</button>
-                                    </div>
-                                    <div class="col-lg-12 text-center">
-                                        <h6>Login with Social media</h6>
-                                        <div className="d-flex justify-content-center">
-                                            <a className="btn btn-danger  google-plus" href="">
-                                                <i className="fa fa-google-plus mr-2"></i>Google Plus</a>
-                                        </div>
+                                    <button className="login-button">Signup</button>
+                                </div>
+                                <div className="additional-options">
+                                    <div className="forgot-signup">
+                                        <a href={link.forgotPass} className="forgot-password">
+                                            Forgot Password?
+                                        </a>
+                                        <a href={link.login} className="signup-button">Back</a>
                                     </div>
                                 </div>
-                            </form>
-                        </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+                <div className="image-column">
+                    <div className="image-wrapper">
+                        <img
+                            loading="lazy"
+                            src="https://cdn.builder.io/api/v1/image/assets/TEMP/4cb3ad98ec868d7e62dc105cdf1843a3f0a861bd41b9e232e06213bccab9614c?apiKey=5dd4f9cda63a40ecb7fdb7955805b9bd&"
+                            className="login-image"
+                            alt="Login Illustration"
+                        />
                     </div>
                 </div>
             </div>
-        </>
+        </section>
+
     )
 }

@@ -1,5 +1,6 @@
 import React from "react";
 import './css/styleLandingPage.css'
+import { link } from "../../../core/constants/link";
 
 export default function LandingPage() {
   return (
@@ -19,7 +20,7 @@ export default function LandingPage() {
             <a href="#" className="nav-link">
               About us
             </a>
-            <a href="#" className="login-button" style={{textDecoration: 'none', margin: 0}}>
+            <a href={link.login} className="login-button" style={{textDecoration: 'none', margin: 0}}>
               Login
             </a>
           </nav>
