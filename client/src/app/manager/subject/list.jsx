@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEdit, faTrash, faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import './css/list.css'
+import { action_list } from '../../core/constants/action-list'
 
 const mockData = [
     { id: 1, name: 'Jane Cooper', role: 'Nguyen Tuan Hung', phone: '(225) 555-0118', email: 'jane@microsoft.com', status: 'Active' },
@@ -15,12 +16,39 @@ const mockData = [
   ];
 
   export default function List(){
+    
     const [data, setData] = useState(mockData);
     const [search, setSearch] = useState('');
+    const [showModal, setShowModal] = useState(false);
+    const [currentAction, setCurrentAction] = useState('');
+    const [selectedItem, setSelectedItem] = useState(null);
 
     const handleSearch = (event) => {
         setSearch(event.target.value);
     };
+
+    const handleAddItem = () => {
+        setCurrentAction(action_list.ADD);
+        setShowModal(true);
+      }
+    
+      const handleCloseModal = () => {
+        setShowModal(false);
+        setCurrentAction(action_list.LIST);
+        setSelectedItem(null);
+      }
+    
+      const handleViewItem = (item) => {
+        setShowModal(true);
+        setCurrentAction(action_list.VIEW);
+        setSelectedItem(item);
+      }
+    
+      const handleUpdateItem = (item) => {
+        setSelectedItem(item)
+        setCurrentAction(action_list.EDIT)
+        setShowModal(true)
+      }
 
     const filteredData = data.filter(item =>
         item.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -50,7 +78,7 @@ const mockData = [
                         onChange={handleSearch}
                     />
                     <button className="btn btn-primary">
-                        <FontAwesomeIcon icon={faUserPlus} />
+                        <FontAwesomeIcon icon={faUserPlus} onClick={handleAddItem}/>
                     </button>
                     </div>
                 </div>
@@ -59,6 +87,7 @@ const mockData = [
                     <thead>
                         <tr>
                             <th>Subject</th>
+                            <th>Created by</th>
                             <th>Action</th>
                             <th>Status</th>
                         </tr>
@@ -66,13 +95,14 @@ const mockData = [
                     <tbody>
                         {filteredData.map((item) => (
                         <tr key={item.id}>
+                            <td>{item.name}</td>
                             <td>{item.role}</td>
                             <td>
                                 <button className="btn btn-link p-0 me-2">
-                                    <FontAwesomeIcon icon={faEye} />
+                                    <FontAwesomeIcon icon={faEye}  onClick={()=>handleViewItem(item)}/>
                                 </button>
                                 <button className="btn btn-link p-0 me-2">
-                                    <FontAwesomeIcon icon={faEdit} />
+                                    <FontAwesomeIcon icon={faEdit} onClick={()=>handleUpdateItem(item)}/>
                                 </button>
                                 <button className="btn btn-link p-0">
                                     <FontAwesomeIcon icon={faTrash} />
@@ -102,6 +132,59 @@ const mockData = [
                     </nav>
                 </div>
             </div>
+            { showModal 
+                && (
+                    <>
+                        <div className="modal-backdrop fade show"></div>
+                        <div className="modal fade show" style={{ display: 'block' }} tabIndex="-1">
+                            <div className="modal-dialog modal-lg modal-dialog-centered">
+                                <div className="modal-content">
+                                    <div className="modal-header">
+                                        <h5 className="modal-title">
+                                            {
+                                                (currentAction === action_list.ADD ? 'Add' : 
+                                                    currentAction === action_list.VIEW ? 'Detail' : 'Edit') + ' subject'
+                                            }
+                                        </h5>
+                                    </div>
+                                    <div className="modal-body">
+                                        <div className="flex-direction-column">
+                                            <form className="">
+                                                <div className="form-group mb-3">
+                                                    <label className='mb-2' >Subject name</label>
+                                                    <input type="text" className="form-control" 
+                                                     value={selectedItem?.name || ''} disabled={currentAction === action_list.VIEW}/>
+                                                </div>
+                                                <div className="form-group mb-3">
+                                                    <label className='mb-2'>Description: </label>
+                                                    <textarea type="text" className="form-control" style = {{height:"6em"}}
+                                                     value={selectedItem?.email || ''} disabled={currentAction === action_list.VIEW}/>
+                                                </div>
+                                                <div className="form-group mb-3">
+                                                    <label>Status</label>
+                                                    <select className="form-select" value={selectedItem?.status || ''} disabled={currentAction === action_list.VIEW}>
+                                                        <option value="Active">Active</option>
+                                                        <option value="Inactive">Inactive</option>
+                                                    </select>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div className="modal-footer">
+                                        <button type="button" className="btn btn-secondary" onClick={handleCloseModal}>Back</button>
+                                        {
+                                            currentAction !== action_list.VIEW 
+                                            && (
+                                                <button type="button" className="btn btn-success">{currentAction === action_list.ADD ? 'Add' : 'Save'}</button>
+                                            )
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </>
+                )
+            }
         </div>
     )
 }

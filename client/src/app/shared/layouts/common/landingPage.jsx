@@ -19,7 +19,7 @@ export default function LandingPage() {
             <a href="#" className="nav-link">
               About us
             </a>
-            <a href="#" className="login-button" style={{textDecoration: 'none'}}>
+            <a href="#" className="login-button" style={{textDecoration: 'none', margin: 0}}>
               Login
             </a>
           </nav>
