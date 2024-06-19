@@ -2,25 +2,37 @@ import { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEdit, faTrash, faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import './css/list.css'
+import  CreateQuizComponent from './create'
+import  EditQuizComponent from './edit'
+import { status } from '../../core/constants/config'
 
 const mockData = [
-    { id: 1, quiz_name: 'Jane Cooper', created_user: 'Nguyen Tuan Hung', subject_name: 'Subject Name', chapter_name: 'jane@microsoft.com', lesson_name: 'lesson1', total_question: 20, status: 'Active' },
-    { id: 2, quiz_name: 'Floyd Miles', created_user: 'Nguyen Anh Tuan', subject_name: 'Subject Name', chapter_name: 'floyd@yahoo.com', lesson_name: 'lesson1', total_question: 20, status: 'Inactive' },
-    { id: 3, quiz_name: 'Ronald Richards', created_user: 'Tran Trong Huu', subject_name: 'Subject Name', chapter_name: 'ronald@adobe.com', lesson_name: 'lesson1', total_question: 20, status: 'Inactive' },
-    { id: 4, quiz_name: 'Marvin McKinney', created_user: 'Nguyen Tuan Hung', subject_name: 'Subject Name', chapter_name: 'marvin@tesla.com', lesson_name: 'lesson1', total_question: 20, status: 'Active' },
-    { id: 5, quiz_name: 'Jerome Bell', created_user: 'Nguyen Anh Tuan', subject_name: 'Subject Name', chapter_name: 'jerome@google.com',lesson_name: 'lesson1', total_question: 20, status: 'Inactive' },
-    { id: 6, quiz_name: 'Kathryn Murphy', created_user: 'Tran Trong Huu', subject_name: 'Subject Name', chapter_name: 'kathryn@microsoft.c', lesson_name: 'lesson1', total_question: 20, status: 'Active' },
-    { id: 7, quiz_name: 'Jacob Jones', created_user: 'Nguyen Anh Tuan', subject_name: 'Subject Name', chapter_name: 'jacob@yahoo.com',  lesson_name: 'lesson1', total_question: 20, status: 'Active' },
-    { id: 8, quiz_name: 'Kristin Watson', created_user: 'Trainee', subject_name: 'Subject Name', chapter_name: 'kristin@facebook.co', lesson_name: 'lesson1', total_question: 20, status: 'Inactive' },
+    { id: 1, quiz_name: 'Jane Cooper', created_user: 'Nguyen Tuan Hung', subject_name: 'Subject Name', chapter_name: 'jane@microsoft.com', lesson_name: 'lesson1', total_question: 20, status: 1 },
+    { id: 2, quiz_name: 'Floyd Miles', created_user: 'Nguyen Anh Tuan', subject_name: 'Subject Name', chapter_name: 'floyd@yahoo.com', lesson_name: 'lesson1', total_question: 20, status: 0 },
+    { id: 3, quiz_name: 'Ronald Richards', created_user: 'Tran Trong Huu', subject_name: 'Subject Name', chapter_name: 'ronald@adobe.com', lesson_name: 'lesson1', total_question: 20, status: 0 },
+    { id: 4, quiz_name: 'Marvin McKinney', created_user: 'Nguyen Tuan Hung', subject_name: 'Subject Name', chapter_name: 'marvin@tesla.com', lesson_name: 'lesson1', total_question: 20, status: 1 },
+    { id: 5, quiz_name: 'Jerome Bell', created_user: 'Nguyen Anh Tuan', subject_name: 'Subject Name', chapter_name: 'jerome@google.com',lesson_name: 'lesson1', total_question: 20, status: 0 },
+    { id: 6, quiz_name: 'Kathryn Murphy', created_user: 'Tran Trong Huu', subject_name: 'Subject Name', chapter_name: 'kathryn@microsoft.c', lesson_name: 'lesson1', total_question: 20, status: 1 },
+    { id: 7, quiz_name: 'Jacob Jones', created_user: 'Nguyen Anh Tuan', subject_name: 'Subject Name', chapter_name: 'jacob@yahoo.com',  lesson_name: 'lesson1', total_question: 20, status: 1 },
+    { id: 8, quiz_name: 'Kristin Watson', created_user: 'Trainee', subject_name: 'Subject Name', chapter_name: 'kristin@facebook.co', lesson_name: 'lesson1', total_question: 20, status: 0 },
   ];
 
   export default function List(){
     const [data, setData] = useState(mockData);
     const [search, setSearch] = useState('');
+    const [showCreateModal, setshowCreateModal] = useState(false);
+    const [showEditModal, setshowEditModal] = useState(false);
 
     const handleSearch = (event) => {
         setSearch(event.target.value);
     };
+
+    const handleCloseCreateModal = () => {
+        setshowCreateModal(false)
+    }
+    const handleCloseEditModal = () => {
+        setshowEditModal(false)
+    }
 
     const filteredData = data.filter(item =>
         item.quiz_name.toLowerCase().includes(search.toLowerCase()) ||
@@ -50,7 +62,7 @@ const mockData = [
                         value={search}
                         onChange={handleSearch}
                     />
-                    <button className="btn btn-primary">
+                    <button className="btn btn-primary" onClick = {() => setshowCreateModal(true)}>
                         <FontAwesomeIcon icon={faUserPlus} />
                     </button>
                     </div>
@@ -80,17 +92,17 @@ const mockData = [
                             <td>{item.total_question}</td>
                             <td>
                                 <button className="btn btn-link p-0 me-2">
-                                    <FontAwesomeIcon icon={faEye} />
+                                    <FontAwesomeIcon icon={faEye} onClick={() => setshowEditModal(true)}/>
                                 </button>
                                 <button className="btn btn-link p-0 me-2">
-                                    <FontAwesomeIcon icon={faEdit} />
+                                    <FontAwesomeIcon icon={faEdit} onClick={() => setshowEditModal(true)}/>
                                 </button>
                                 <button className="btn btn-link p-0">
                                     <FontAwesomeIcon icon={faTrash} />
                                 </button>
                             </td>
                             <td>
-                                <span className={`badge ${item.status === 'Active' ? 'bg-success' : 'bg-danger'}`}>
+                                <span className={`badge ${item.status === status.ACTIVE ? 'bg-success' : 'bg-danger'}`}>
                                     {item.status}
                                 </span>
                             </td>
@@ -113,6 +125,8 @@ const mockData = [
                     </nav>
                 </div>
             </div>
+            <CreateQuizComponent showModal={showCreateModal} handleCloseModal={handleCloseCreateModal}/>
+            <EditQuizComponent showModal={showEditModal} handleCloseModal={handleCloseEditModal}/>
         </div>
     )
 }

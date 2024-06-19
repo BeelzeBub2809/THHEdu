@@ -1,5 +1,5 @@
 import './userManage.css'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEdit, faUserPlus } from '@fortawesome/free-solid-svg-icons'
 const mockData = [
@@ -17,12 +17,17 @@ export default function UserManagement() {
   const [data, setData] = useState(mockData)
   const [search, setSearch] = useState('')
   const [showModal, setShowModal] = useState(false)
-  const [imagePreview, setImagePreview] = useState('https://static.vecteezy.com/system/resources/previews/000/439/863/original/vector-users-icon.jpg')
+  const [imagePreview, setImagePreview] = useState(null)
   const [currentAction, setCurrentAction] = useState('')
   const [selectedUser, setSelectedUser] = useState(null)
   const [sortCriteria, setSortCriteria] = useState('name')
   const [sortDirection, setSortDirection] = useState('asc')
 
+  useEffect(()=>{
+    return () => {
+      imagePreview && URL.revokeObjectURL(imagePreview)
+    }
+  },[imagePreview])
   const handleSearch = (event) => {
     setSearch(event.target.value)
   }
@@ -36,6 +41,7 @@ export default function UserManagement() {
     setShowModal(false)
     setCurrentAction('')
     setSelectedUser(null)
+    setImagePreview('https://static.vecteezy.com/system/resources/previews/000/439/863/original/vector-users-icon.jpg')
   }
 
   const handleViewUser = (user) => {
@@ -72,11 +78,8 @@ export default function UserManagement() {
   const handleImageChange = (event) => {
     const file = event.target.files[0]
     if (file) {
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        setImagePreview(reader.result)
-      };
-      reader.readAsDataURL(file)
+      file.preview = URL.createObjectURL(file)
+      setImagePreview(file.preview)
     }
   }
 
@@ -170,7 +173,7 @@ export default function UserManagement() {
                 <div className="modal-body">
                   <div className="d-flex" style={{gap:'20px'}}>
                     <div className='d-flex' style={{width:'80%', flexDirection:'column', alignItems:'center'}}>
-                      <img src={imagePreview} alt="User" className="avatar" />
+                      <img src={imagePreview || (selectedUser?.avatar|| 'https://static.vecteezy.com/system/resources/previews/000/439/863/original/vector-users-icon.jpg')} alt="User" className="avatar" />
                       <div className="mt-3">
                         {currentAction !== 'view' && (
                         <div className="mt-3">

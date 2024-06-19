@@ -5,3 +5,8 @@ export const role = {
     TRAINEE: 4,
     ANONYMOUS: 5
 }
+
+export const status = {
+    INACTIVE: 0,
+    ACTIVE: 1,
+}
