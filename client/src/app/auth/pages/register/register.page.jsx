@@ -2,7 +2,7 @@ import React from "react";
 import { link } from '../../../core/constants/link';
 import '../login/login.pages.css'
 
-export default function RegisterPage() {
+export default function RegisterPage(){
     return (
         <section className="container">
             <div className="content-wrapper">
@@ -78,6 +78,5 @@ export default function RegisterPage() {
                 </div>
             </div>
         </section>
-
     )
 }

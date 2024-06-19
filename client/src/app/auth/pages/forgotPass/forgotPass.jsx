@@ -2,7 +2,7 @@ import React from "react";
 import '../login/login.pages.css'
 import {link} from '../../../core/constants/link'
 
-export default function ForgotPassPage() {
+export default function ForgotPassPage(){
   return (
     <section className="container">
       <div className="content-wrapper">
@@ -46,6 +46,5 @@ export default function ForgotPassPage() {
         </div>
       </div>
     </section>
-
   )
 }

@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEdit, faTrash, faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import './css/list.css'
+import CreateQuiz from './create';
+import EditQuiz from './edit';
 
 const mockData = [
     { id: 1, content: 'What is React', created_user: 'Nguyen Tuan Hung', subject_name: 'Subject Name', chapter_name: 'jane@microsoft.com', lesson_name: 'lesson1', total_question: 20, status: 'Active' },
@@ -17,7 +19,14 @@ const mockData = [
   export default function List(){
     const [data, setData] = useState(mockData);
     const [search, setSearch] = useState('');
-
+    const [showCreateModal, setshowCreateModal] = useState(false);
+    const [showEditModal, setshowEditModal] = useState(false);
+    const handleCloseCreateModal = () => {
+        setshowCreateModal(false)
+    }
+    const handleCloseEditModal = () => {
+        setshowEditModal(false)
+    }
     const handleSearch = (event) => {
         setSearch(event.target.value);
     };
@@ -50,7 +59,7 @@ const mockData = [
                         value={search}
                         onChange={handleSearch}
                     />
-                    <button className="btn btn-primary">
+                    <button className="btn btn-primary" onClick={() => setshowCreateModal(true)}>
                         <FontAwesomeIcon icon={faUserPlus} />
                     </button>
                     </div>
@@ -80,7 +89,7 @@ const mockData = [
                                 <button className="btn btn-link p-0 me-2">
                                     <FontAwesomeIcon icon={faEye} />
                                 </button>
-                                <button className="btn btn-link p-0 me-2">
+                                <button className="btn btn-link p-0 me-2" onClick={() => setshowEditModal(true)}>
                                     <FontAwesomeIcon icon={faEdit} />
                                 </button>
                                 <button className="btn btn-link p-0">
@@ -111,6 +120,8 @@ const mockData = [
                     </nav>
                 </div>
             </div>
+            <CreateQuiz showModal={showCreateModal} handleCloseModal={handleCloseCreateModal}/>
+            <EditQuiz showModal={showEditModal} handleCloseModal={handleCloseEditModal}/>
         </div>
     )
 }
