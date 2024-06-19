@@ -2,26 +2,38 @@ import { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEdit, faTrash, faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import './css/list.css'
+import CreateQuestionComponent from './create';
+import EditQuestionComponent from './edit';
+import { status } from '../../core/constants/config'
 
 const mockData = [
-    { id: 1, content: 'What is React', created_user: 'Nguyen Tuan Hung', subject_name: 'Subject Name', chapter_name: 'jane@microsoft.com', lesson_name: 'lesson1', total_question: 20, status: 'Active' },
-    { id: 2, content: 'What is React', created_user: 'Nguyen Anh Tuan', subject_name: 'Subject Name', chapter_name: 'floyd@yahoo.com', lesson_name: 'lesson1', total_question: 20, status: 'Inactive' },
-    { id: 3, content: 'What is React', created_user: 'Tran Trong Huu', subject_name: 'Subject Name', chapter_name: 'ronald@adobe.com', lesson_name: 'lesson1', total_question: 20, status: 'Inactive' },
-    { id: 4, content: 'What is React', created_user: 'Nguyen Tuan Hung', subject_name: 'Subject Name', chapter_name: 'marvin@tesla.com', lesson_name: 'lesson1', total_question: 20, status: 'Active' },
-    { id: 5, content: 'What is React', created_user: 'Nguyen Anh Tuan', subject_name: 'Subject Name', chapter_name: 'jerome@google.com',lesson_name: 'lesson1', total_question: 20, status: 'Inactive' },
-    { id: 6, content: 'What is React', created_user: 'Tran Trong Huu', subject_name: 'Subject Name', chapter_name: 'kathryn@microsoft.c', lesson_name: 'lesson1', total_question: 20, status: 'Active' },
-    { id: 7, content: 'What is React', created_user: 'Nguyen Anh Tuan', subject_name: 'Subject Name', chapter_name: 'jacob@yahoo.com',  lesson_name: 'lesson1', total_question: 20, status: 'Active' },
-    { id: 8, content: 'What is React', created_user: 'Trainee', subject_name: 'Subject Name', chapter_name: 'kristin@facebook.co', lesson_name: 'lesson1', total_question: 20, status: 'Inactive' },
+    { id: 1, content: 'What is React', created_user: 'Nguyen Tuan Hung', subject_name: 'Subject Name', chapter_name: 'jane@microsoft.com', lesson_name: 'lesson1', total_question: 20, status: 1 },
+    { id: 2, content: 'What is React', created_user: 'Nguyen Anh Tuan', subject_name: 'Subject Name', chapter_name: 'floyd@yahoo.com', lesson_name: 'lesson1', total_question: 20, status: 0 },
+    { id: 3, content: 'What is React', created_user: 'Tran Trong Huu', subject_name: 'Subject Name', chapter_name: 'ronald@adobe.com', lesson_name: 'lesson1', total_question: 20, status: 0 },
+    { id: 4, content: 'What is React', created_user: 'Nguyen Tuan Hung', subject_name: 'Subject Name', chapter_name: 'marvin@tesla.com', lesson_name: 'lesson1', total_question: 20, status: 1 },
+    { id: 5, content: 'What is React', created_user: 'Nguyen Anh Tuan', subject_name: 'Subject Name', chapter_name: 'jerome@google.com',lesson_name: 'lesson1', total_question: 20, status: 0 },
+    { id: 6, content: 'What is React', created_user: 'Tran Trong Huu', subject_name: 'Subject Name', chapter_name: 'kathryn@microsoft.c', lesson_name: 'lesson1', total_question: 20, status: 1 },
+    { id: 7, content: 'What is React', created_user: 'Nguyen Anh Tuan', subject_name: 'Subject Name', chapter_name: 'jacob@yahoo.com',  lesson_name: 'lesson1', total_question: 20, status: 1 },
+    { id: 8, content: 'What is React', created_user: 'Trainee', subject_name: 'Subject Name', chapter_name: 'kristin@facebook.co', lesson_name: 'lesson1', total_question: 20, status: 0 },
   ];
 
   export default function List(){
     const [data, setData] = useState(mockData);
     const [search, setSearch] = useState('');
-
+    const [showCreateModal, setshowCreateModal] = useState(false);
+    const [showEditModal, setshowEditModal] = useState(false);
+   
     const handleSearch = (event) => {
         setSearch(event.target.value);
     };
 
+    const handleCloseCreateModal = () => {
+        setshowCreateModal(false)
+    }
+    const handleCloseEditModal = () => {
+        setshowEditModal(false)
+    }
+    
     const filteredData = data.filter(item =>
         item.content.toLowerCase().includes(search.toLowerCase()) ||
         item.created_user.toLowerCase().includes(search.toLowerCase()) ||
@@ -50,7 +62,7 @@ const mockData = [
                         value={search}
                         onChange={handleSearch}
                     />
-                    <button className="btn btn-primary">
+                    <button className="btn btn-primary" onClick={() => setshowCreateModal(true)}>
                         <FontAwesomeIcon icon={faUserPlus} />
                     </button>
                     </div>
@@ -78,9 +90,9 @@ const mockData = [
                             <td>{item.created_user}</td>
                             <td>
                                 <button className="btn btn-link p-0 me-2">
-                                    <FontAwesomeIcon icon={faEye} />
+                                    <FontAwesomeIcon icon={faEye} onClick={() => setshowEditModal(true)} />
                                 </button>
-                                <button className="btn btn-link p-0 me-2">
+                                <button className="btn btn-link p-0 me-2" onClick={() => setshowEditModal(true)}>
                                     <FontAwesomeIcon icon={faEdit} />
                                 </button>
                                 <button className="btn btn-link p-0">
@@ -88,7 +100,7 @@ const mockData = [
                                 </button>
                             </td>
                             <td>
-                                <span className={`badge ${item.status === 'Active' ? 'bg-success' : 'bg-danger'}`}>
+                                <span className={`badge ${item.status === status.INACTIVE ? 'bg-success' : 'bg-danger'}`}>
                                     {item.status}
                                 </span>
                             </td>
@@ -111,6 +123,8 @@ const mockData = [
                     </nav>
                 </div>
             </div>
+            <CreateQuestionComponent showModal={showCreateModal} handleCloseModal={handleCloseCreateModal}/>
+            <EditQuestionComponent showModal={showEditModal} handleCloseModal={handleCloseEditModal}/>
         </div>
     )
 }
