@@ -2,8 +2,8 @@ import { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEdit, faTrash, faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import './css/list.css'
-import  CreateQuizComponent from './create'
-import  EditQuizComponent from './edit'
+import  CreateQuizComponent from './create.quiz'
+import  EditQuizComponent from './edit.quiz'
 import { status } from '../../core/constants/config'
 
 const mockData = [
@@ -17,7 +17,7 @@ const mockData = [
     { id: 8, quiz_name: 'Kristin Watson', created_user: 'Trainee', subject_name: 'Subject Name', chapter_name: 'kristin@facebook.co', lesson_name: 'lesson1', total_question: 20, status: 0 },
   ];
 
-  export default function List(){
+  export default function ListQuizComponent(){
     const [data, setData] = useState(mockData);
     const [search, setSearch] = useState('');
     const [showCreateModal, setshowCreateModal] = useState(false);
@@ -102,9 +102,17 @@ const mockData = [
                                 </button>
                             </td>
                             <td>
-                                <span className={`badge ${item.status === status.ACTIVE ? 'bg-success' : 'bg-danger'}`}>
-                                    {item.status}
-                                </span>
+                                {
+                                    item.status === status.ACTIVE ? (
+                                        <span className = "badge bg-success">
+                                            Active
+                                        </span>
+                                    ) : ( 
+                                        <span className = "badge bg-danger">
+                                            Inactive
+                                        </span>
+                                    )
+                                }
                             </td>
                         </tr>
                         ))}

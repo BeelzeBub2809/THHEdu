@@ -2,8 +2,8 @@ import { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEdit, faTrash, faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import './css/list.css'
-import CreateQuestionComponent from './create';
-import EditQuestionComponent from './edit';
+import CreateQuestionComponent from './create.question';
+import EditQuestionComponent from './edit.question';
 import { status } from '../../core/constants/config'
 
 const mockData = [
@@ -17,7 +17,7 @@ const mockData = [
     { id: 8, content: 'What is React', created_user: 'Trainee', subject_name: 'Subject Name', chapter_name: 'kristin@facebook.co', lesson_name: 'lesson1', total_question: 20, status: 0 },
   ];
 
-  export default function List(){
+  export default function ListQuestionComponent(){
     const [data, setData] = useState(mockData);
     const [search, setSearch] = useState('');
     const [showCreateModal, setshowCreateModal] = useState(false);
@@ -30,6 +30,7 @@ const mockData = [
     const handleCloseCreateModal = () => {
         setshowCreateModal(false)
     }
+    
     const handleCloseEditModal = () => {
         setshowEditModal(false)
     }
@@ -100,9 +101,17 @@ const mockData = [
                                 </button>
                             </td>
                             <td>
-                                <span className={`badge ${item.status === status.INACTIVE ? 'bg-success' : 'bg-danger'}`}>
-                                    {item.status}
-                                </span>
+                                {
+                                    item.status === status.ACTIVE ? (
+                                        <span className = "badge bg-success">
+                                            Active
+                                        </span>
+                                    ) : ( 
+                                        <span className = "badge bg-danger">
+                                            Inactive
+                                        </span>
+                                    )
+                                }
                             </td>
                         </tr>
                         ))}
