@@ -26,4 +26,8 @@ export class AuthService{
         const userDetail = JSON.parse(user);
         return userDetail.data.roleId;
     }
+
+    static getUserDetail() {
+        return this.userDetail || null;
+    }
 }

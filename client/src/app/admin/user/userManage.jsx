@@ -59,7 +59,6 @@ export default function UserManagement() {
   const handleSortChange = (event) => {
     const value = event.target.value
     const [criteria, direction] = value.split('-')
-    console.log(criteria,direction);
     setSortCriteria(criteria)
     setSortDirection(direction)
   }

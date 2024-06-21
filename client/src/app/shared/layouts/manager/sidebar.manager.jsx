@@ -27,10 +27,7 @@ function SidebarManager(){
                                 onClick={() => handleSectionClick(item.label)}
                                 style={{textDecoration: 'none', color:'black'}}
                             >
-                                <img
-                                src= {item.iconUrl}
-                                alt="Dashboard Icon"
-                                />
+                                <img src= {item.iconUrl} alt="Dashboard Icon"/>
                                 <div className="sidebar-section-title">{item.label}</div>
                             </Link>
                         </div>
