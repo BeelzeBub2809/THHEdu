@@ -35,7 +35,13 @@ const quizSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'Question',
     required: true
+  },
+  createBy: {
+    type: Schema.ObjectId,
+    ref: 'User'
   }
+},{
+  timestamps: true
 })
 const DbQuiz = mongoose.model('Quiz',quizSchema)
 module.exports = DbQuiz

@@ -12,6 +12,8 @@ const joinedSubjectSchema = new Schema({
     required: true
   },
   latestChapter: Number
+},{
+  timestamps: true
 })
 const DbJoinedSubject = mongoose.model('JoinedSubject', joinedSubjectSchema)
 module.exports = DbJoinedSubject

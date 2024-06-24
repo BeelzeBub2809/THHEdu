@@ -21,7 +21,13 @@ const subjectSchema = new Schema({
   price: {
     type: Number,
     required: true
+  },
+  createBy: {
+    type: Schema.ObjectId,
+    ref: 'User'
   }
+},{
+  timestamps: true
 })
 const DbSubject = mongoose.model('Subject', subjectSchema)
 module.exports = DbSubject

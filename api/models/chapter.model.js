@@ -16,7 +16,13 @@ const chapterSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'Subject',
     required: true
+  },
+  createBy: {
+    type: Schema.ObjectId,
+    ref: 'User'
   }
+},{
+  timestamps: true
 })
 const DbChapter = mongoose.model('Chapter', chapterSchema)
 module.exports = DbChapter

@@ -19,13 +19,19 @@ const questionSchema = new Schema({
     ref: 'Chapter',
     required: true
   },
-  answer: {
-    answerContent: [{
+  answer: [{
+    answerContent: {
       type: String,
       trim: true
-    }],
+    },
     isCorrected: Boolean
+  }],
+  createBy: {
+    type: Schema.ObjectId,
+    ref: 'User'
   }
+},{
+  timestamps: true
 })
 const DbQuestion = mongoose.model('Question', questionSchema)
 module.exports = DbQuestion
