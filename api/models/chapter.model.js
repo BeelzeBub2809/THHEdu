@@ -18,3 +18,5 @@ const chapterSchema = new Schema({
     required: true
   }
 })
+const DbChapter = mongoose.model('Chapter', chapterSchema)
+module.exports = DbChapter

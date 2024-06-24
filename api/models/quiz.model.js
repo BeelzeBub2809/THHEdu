@@ -37,5 +37,5 @@ const quizSchema = new Schema({
     required: true
   }
 })
-const Quiz = mongoose.model('Quiz',quizSchema)
-module.exports = Quiz
+const DbQuiz = mongoose.model('Quiz',quizSchema)
+module.exports = DbQuiz

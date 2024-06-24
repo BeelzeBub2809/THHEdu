@@ -19,5 +19,5 @@ const submittedQuiz = new Schema({
     required: true,
   }
 })
-const SubmittedQuiz = mongoose.model('SubmittedQuiz', submittedQuiz)
-module.exports = SubmittedQuiz
+const DbSubmittedQuiz = mongoose.model('SubmittedQuiz', submittedQuiz)
+module.exports = DbSubmittedQuiz

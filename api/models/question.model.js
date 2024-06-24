@@ -27,5 +27,5 @@ const questionSchema = new Schema({
     isCorrected: Boolean
   }
 })
-const Question = mongoose.model('Question', questionSchema)
-module.exports = Question
+const DbQuestion = mongoose.model('Question', questionSchema)
+module.exports = DbQuestion

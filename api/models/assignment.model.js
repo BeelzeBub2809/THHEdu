@@ -35,5 +35,5 @@ const assignmentSchema = new Schema({
     required: true
   }
 })
-const Assignment = mongoose.model('Assignment', assignmentSchema)
-module.exports = Assignment
+const DbAssignment = mongoose.model('Assignment', assignmentSchema)
+module.exports = DbAssignment

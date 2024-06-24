@@ -34,5 +34,5 @@ const userSchema = new Schema({
     required: true
   }
 })
-const User = mongoose.model('User', userSchema)
-module.exports = User
+const DbUser = mongoose.model('User', userSchema)
+module.exports = DbUser

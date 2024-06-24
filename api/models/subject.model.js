@@ -23,5 +23,5 @@ const subjectSchema = new Schema({
     required: true
   }
 })
-const Subject = mongoose.model('Subject', subjectSchema)
-module.exports = Subject
+const DbSubject = mongoose.model('Subject', subjectSchema)
+module.exports = DbSubject

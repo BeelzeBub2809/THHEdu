@@ -13,5 +13,5 @@ const joinedSubjectSchema = new Schema({
   },
   latestChapter: Number
 })
-const JoinedSubject = mongoose.model('JoinedSubject', joinedSubjectSchema)
-module.exports = JoinedSubject
+const DbJoinedSubject = mongoose.model('JoinedSubject', joinedSubjectSchema)
+module.exports = DbJoinedSubject

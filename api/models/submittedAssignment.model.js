@@ -27,5 +27,5 @@ const submittedAssignment = new Schema({
     required: true
   }
 })
-const SubmittedAssignment = mongoose.model('SubmittedAssignment', submittedAssignment)
-module.exports = SubmittedAssignment
+const DbSubmittedAssignment = mongoose.model('SubmittedAssignment', submittedAssignment)
+module.exports = DbSubmittedAssignment
