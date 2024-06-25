@@ -1,0 +1,31 @@
+.branding {
+    display: flex;
+    gap: 20px;
+    font-size: 22px;
+    color: #fcc822;
+    font-weight: 700;
+    justify-content: space-between;
+    margin: auto 0;
+  }
+  
+  .branding img {
+    aspect-ratio: 1.39;
+    object-fit: auto;
+    object-position: center;
+    width: 32px;
+  }
+  
+  .branding .title {
+    display: flex;
+    align-items: center;
+  }
+  
+  .title-main {
+    font-weight: 400;
+    color: black;
+  }
+  
+  .title-highlight {
+    font-weight: 400;
+    color: rgba(252, 200, 34, 1);
+  }

@@ -17,10 +17,6 @@ const quizSchema = new Schema({
     type: Boolean,
     default: true
   },
-  type: {
-    type: String,
-    enum: ['random','fixed']
-  },
   subjectId: {
     type: Schema.ObjectId,
     ref: 'Subject',
@@ -31,11 +27,11 @@ const quizSchema = new Schema({
     ref: 'Chapter',
     required: true
   },
-  questionId: {
+  questionId: [{
     type: Schema.ObjectId,
     ref: 'Question',
     required: true
-  },
+  }],
   createBy: {
     type: Schema.ObjectId,
     ref: 'User'

@@ -17,7 +17,7 @@ const mockData = [
     { id: 8, quiz_name: 'Kristin Watson', created_user: 'Trainee', subject_name: 'Subject Name', chapter_name: 'kristin@facebook.co', lesson_name: 'lesson1', total_question: 20, status: 0 },
   ];
 
-  export default function ListQuizComponent(){
+export default function ListQuizComponent(){
     const [data, setData] = useState(mockData);
     const [search, setSearch] = useState('');
     const [showCreateModal, setshowCreateModal] = useState(false);
