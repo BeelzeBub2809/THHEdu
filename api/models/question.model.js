@@ -19,6 +19,16 @@ const questionSchema = new Schema({
     ref: 'Chapter',
     required: true
   },
+  type: {
+    type: String, 
+    required: true,
+  },
+  image: {
+    type: String,
+  },
+  code: {
+    type: String
+  },
   answer: [{
     answerContent: {
       type: String,

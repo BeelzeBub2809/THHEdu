@@ -4,10 +4,10 @@ const submittedQuiz = new Schema({
   mark: {
     type: Number
   },
-  answer: {
-    type: [String],
-    required: true
-  },
+  choice: [{
+    type: String,
+    trim: true
+  }],
   traineeId: {
     type: Schema.ObjectId,
     ref: 'User',
