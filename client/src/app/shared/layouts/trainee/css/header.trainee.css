@@ -1,0 +1,77 @@
+body {
+    font-family: Poppins, sans-serif;
+  }
+  
+  .container-fluid {
+    background-color: #efefef;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+  }
+  
+  .top-bar {
+    background-color: #87cefa;
+    display: flex;
+    width: 100%;
+    gap: 20px;
+    justify-content: space-between;
+    padding: 18px 41px;
+  }
+  
+  @media (max-width: 991px) {
+    .top-bar {
+      max-width: 100%;
+      flex-wrap: wrap;
+      padding: 0 20px;
+    }
+  }
+  
+  .branding {
+    display: flex;
+    gap: 20px;
+    font-size: 22px;
+    color: #fcc822;
+    font-weight: 700;
+    justify-content: space-between;
+    margin: auto 0;
+  }
+  
+  .branding img {
+    aspect-ratio: 1.39;
+    object-fit: auto;
+    object-position: center;
+    width: 32px;
+  }
+  
+  .branding .title {
+    display: flex;
+    align-items: center;
+  }
+  
+  .title-main {
+    font-weight: 400;
+    color: black;
+  }
+  
+  .title-highlight {
+    font-weight: 400;
+    color: rgba(252, 200, 34, 1);
+  }
+  
+  .nav-icons {
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+  }
+  
+  .nav-icons img {
+    width: 40px;
+  }
+  
+  .nav-icons .icon-3 {
+    aspect-ratio: 1;
+    width: 43px;
+    align-self: flex-start;
+  }

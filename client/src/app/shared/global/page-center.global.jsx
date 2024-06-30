@@ -4,7 +4,6 @@ import {theme} from '../styles/theme.style'
 const PageCenterGlobalComponent = ({justifyCenter, children}) => {
     const baseStyle = {
         background: theme.colors.background,
-        minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',

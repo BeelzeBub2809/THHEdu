@@ -5,7 +5,7 @@ html, body {
 .container {
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  /* height: 100vh; */
   padding-left: 80px;
   width: 70%;
 }
