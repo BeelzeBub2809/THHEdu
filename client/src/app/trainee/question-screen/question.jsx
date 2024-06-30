@@ -25,24 +25,24 @@ const QuestionComponent = ({questionContent, code, image, type, answers, current
 };
 
 const styles = {
-  questionContainer: {
-    marginTop: '30px',
-    marginBottom: '40px',
-    maxWidth: '88%',
-  },
-  answersContainer: {
-    maxWidth: '78%',
-  },
-  questionStyle: {
-    fontSize: 'clamp(18px, 4vw, 28px)',
-    fontWeight: '500',
-    marginBottom: '25px',
-    color: '#11052C',
-    lineHeight: '1.3',
-  },
-  mediaQueryStyle : window.matchMedia('(max-width: 600px)').matches
-    ? { maxWidth: '55px' }
-    : {},
+    questionContainer: {
+        marginTop: '30px',
+        marginBottom: '40px',
+        maxWidth: '88%',
+    },
+    answersContainer: {
+        maxWidth: '78%',
+    },
+    questionStyle: {
+        fontSize: 'clamp(18px, 4vw, 28px)',
+        fontWeight: '500',
+        marginBottom: '25px',
+        color: '#11052C',
+        lineHeight: '1.3',
+    },
+    mediaQueryStyle : window.matchMedia('(max-width: 600px)').matches
+        ? { maxWidth: '55px' }
+        : {},
 };
 
 export default QuestionComponent;

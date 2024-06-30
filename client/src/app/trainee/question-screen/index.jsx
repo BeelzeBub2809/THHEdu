@@ -47,9 +47,20 @@ export default function QuestionPracticeScreen () {
         setCurrentChoice([]);
     };
 
+    const onClickSkip = () => {
+        submittedQuiz.choice.push( { choicePerQuestion: []});
+
+        if (activeQuestion !== questionList.length - 1) {
+            setActiveQuestion((prev) => prev + 1)
+        } else {
+            const timeTaken = 10; // total time - remain time 
+            submittedQuiz.time = timeTaken;
+        }
+        setCurrentChoice([]);
+    }
+
     return (
         <PageCenterGlobalComponent>
-            <div style = {styles.logoContainer}><LogoComponent isShowMenu = {(false)}/></div>
             <div style = {styles.quizContainer}>
                 <HeaderQuizComponent
                     activeQuestion = {activeQuestion}
@@ -66,11 +77,19 @@ export default function QuestionPracticeScreen () {
                     handleSelectChoice = {handleSelectChoice}
                 />
                 <div style = {styles.buttonWrapper}>
-                    <button
+                    {
+                        activeQuestion !== quizDetails.totalQuestions - 1 && 
+                            <button
+                                style = {styles.button}
+                                onClick = {onClickSkip}>
+                                {'Skip'}
+                            </button>
+                    }
+                    <button 
                         style = {styles.button}
                         onClick = {onClickNext}
                         disabled = {currentChoice.length === 0}>
-                            {activeQuestion === quizDetails.totalQuestions - 1 ? 'Finish' : 'Next'}
+                        {activeQuestion === quizDetails.totalQuestions - 1 ? 'Finish' : 'Next'}
                     </button>
                 </div>
             </div>
@@ -80,8 +99,7 @@ export default function QuestionPracticeScreen () {
 
 const styles = {
     quizContainer: {
-        width: '900px',
-        minHeight: '500px',
+        width: '60%',
         background: theme.colors.cardBackground,
         borderRadius: '4px',
         padding: '30px 60px 80px 60px',

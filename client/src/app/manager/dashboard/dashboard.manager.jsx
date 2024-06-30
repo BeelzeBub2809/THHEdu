@@ -1,4 +1,4 @@
-import './css/dashboard.css'
+import './css/dashboard.manager.css'
 import { ResponsiveContainer, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts'
 
 const data = [
