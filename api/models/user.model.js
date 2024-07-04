@@ -20,19 +20,27 @@ const userSchema = new Schema({
   },
   phone: {
     type: String,
-    trim: true
+    trim: true,
+    validate: {
+      validator: function(v) {
+        return v.length === 10;
+      },
+      message: 'Phone number must be exactly 10 characters long'
+    }
   },
   avatar: {
     type: String
   },
   status: {
-    type: Boolean
+    type: Boolean,
+    default: true,
+    required: [true, 'Status is required']
   },
-  role: {
+  roles: [{
     type: Schema.ObjectId,
     ref: 'Role',
     required: true
-  }
+  }]
 })
 const DbUser = mongoose.model('User', userSchema)
 module.exports = DbUser
