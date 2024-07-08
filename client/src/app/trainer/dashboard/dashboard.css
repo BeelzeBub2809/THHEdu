@@ -1,0 +1,141 @@
+.wrapper {
+  background-color: #efefef;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0px 60px;
+}
+
+@media (max-width: 991px) {
+  .wrapper {
+    padding: 0 20px;
+  }
+}
+
+.container {
+  background: #efefef;
+  display: flex;
+  margin-top: 12px;
+  width: 100%;
+  max-width: 1166px;
+  flex-direction: column;
+}
+
+@media (max-width: 991px) {
+  .container {
+    background-color: #efefef;
+    max-width: 100%;
+  }
+}
+
+.header {
+  color: #000;
+  font: 400 30px Poppins, sans-serif;
+}
+
+@media (max-width: 991px) {
+  .header {
+    max-width: 100%;
+  }
+}
+
+.statistics {
+  border-radius: 30px;
+  background-color: rgba(255, 255, 255, 1);
+  box-shadow: 0px 10px 60px rgba(226, 236, 249, 0.5);
+  display: flex;
+  margin-top: 73px;
+  width: 100%;
+  gap: 20px;
+  justify-content: space-between;
+  padding: 40px 70px;
+}
+
+@media (max-width: 991px) {
+  .statistics {
+    max-width: 100%;
+    flex-wrap: wrap;
+    margin-top: 40px;
+    padding: 0 20px;
+  }
+}
+
+.stat-item {
+  display: flex;
+  gap: 20px;
+  font-weight: 400;
+  justify-content: space-between;
+}
+
+.stat-image {
+  aspect-ratio: 0.95;
+  object-fit: auto;
+  object-position: center;
+  width: 101px;
+  max-width: 100%;
+}
+
+.stat-item-content {
+  display: flex;
+  flex-direction: column;
+  margin: auto 0;
+}
+
+.stat-title {
+  color: #acacac;
+  letter-spacing: -0.14px;
+  font: 14px Poppins, sans-serif;
+}
+
+.stat-value {
+  color: #333;
+  letter-spacing: -0.32px;
+  margin-top: 20px;
+  font: 600 32px/100% Poppins, sans-serif;
+}
+
+.stat-change {
+  display: flex;
+  margin-top: 16px;
+  gap: 3px;
+  font-size: 12px;
+  color: #292d32;
+  letter-spacing: -0.12px;
+}
+
+.arrow-icon {
+  aspect-ratio: 0.96;
+  object-fit: auto;
+  object-position: center;
+  width: 24px;
+}
+
+.change-text {
+  font-family: Poppins, sans-serif;
+  margin: auto 0;
+}
+
+.divider {
+  border-color: rgba(240, 240, 240, 1);
+  border-style: solid;
+  border-width: 1px;
+  background-color: #f0f0f0;
+  align-self: start;
+  width: 1px;
+  height: 109px;
+}
+
+.card {
+  border-radius: 20px;
+  box-shadow: 0px 1px 4px 0px #e5e9f2;
+  background-color: #fff;
+  margin-top: 136px;
+  height: 370px;
+}
+
+@media (max-width: 991px) {
+  .card {
+    max-width: 100%;
+    margin-top: 40px;
+  }
+}
