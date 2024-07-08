@@ -25,7 +25,8 @@ const subjectSchema = new Schema({
   createBy: {
     type: Schema.ObjectId,
     ref: 'User'
-  }
+  },
+  institutionName: String
 },{
   timestamps: true
 })

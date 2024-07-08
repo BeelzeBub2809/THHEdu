@@ -5,8 +5,10 @@ import { theme } from '../../shared/styles/theme.style';
 import HeaderQuizComponent from './header/header';
 import QuestionComponent from './question';
 import { questionType } from '../../core/constants/type';
+import { useParams } from 'react-router-dom';
 
 export default function QuestionPracticeScreen () {
+    const { quizId } = useParams();
 
     const [activeQuestion, setActiveQuestion] = useState(0);
     const [currentChoice, setCurrentChoice] = useState([]);
@@ -216,6 +218,7 @@ const questionList = [
 ];
 
 const quizDetails = {
+    quizId: 1,
     totalQuestions: questionList.length,
     timer: 10,
 };

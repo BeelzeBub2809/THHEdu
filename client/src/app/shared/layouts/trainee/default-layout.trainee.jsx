@@ -6,11 +6,13 @@ import DashboardTraineePage from '../../../trainee/dashboard/dashboard.trainee';
 import MySubjectComponent from '../../../trainee/my-subject/my-subject.trainee';
 import QuestionPracticeScreen from '../../../trainee/question-screen/index';
 import { link } from '../../../core/constants/link';
+import SubjectDetailComponent from '../../../trainee/subject-detail/subject-detail.trainee';
+import LearnSubjectComponent from '../../../trainee/learning-subject';
 
 function DefaultLayoutTrainee(){
 
     const location = useLocation();
-    const isPracticeQuiz = location.pathname === `${link.trainee}${link.traineePracticeQuiz}`;
+    const isPracticeQuiz = location.pathname.includes(`${link.trainee}${link.traineePracticeQuiz}`);
     
     return(
         <div className = 'container-fluid' style = {{ padding: 0 }}>
@@ -26,7 +28,9 @@ function DefaultLayoutTrainee(){
                         <Route path = {link.traineeDashboard} element = {<DashboardTraineePage/>}/>
                         <Route path = {`${link.traineeMySubject}/*`} element = {<MySubjectComponent/>}/>
                         <Route path = "/*" element = {<PageNotFound/>}/>
-                        <Route path = {link.traineePracticeQuiz} element = {<QuestionPracticeScreen/>}/>
+                        <Route path = {`${link.traineePracticeQuiz}/:quizId`} element = {<QuestionPracticeScreen/>}/>
+                        <Route path = {`${link.traineeSubjectDetail}/:subjectId`} element = {<SubjectDetailComponent/>}/>
+                        <Route path = {`${link.traineeLearnSubject}/:subjectId`} element = {<LearnSubjectComponent/>}/>
                     </Routes>
                 </div>
                 
