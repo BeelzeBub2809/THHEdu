@@ -16,6 +16,8 @@ export const link = {
     traineeDashboard: '/dashboard',
     traineeMySubject: '/my-subject',
     traineePracticeQuiz: '/practice-quiz',
+    traineeSubjectDetail: '/subject-detail',
+    traineeLearnSubject: '/learn',
 
     //link of trainer
     trainer: '/trainer',

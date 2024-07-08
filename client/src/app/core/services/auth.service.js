@@ -28,6 +28,6 @@ export class AuthService{
     }
 
     static getUserDetail() {
-        return this.userDetail || null;
+        return this.userDetail;
     }
 }

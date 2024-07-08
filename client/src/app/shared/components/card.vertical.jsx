@@ -1,7 +1,8 @@
 import React from "react";
 import { Card, Button } from 'react-bootstrap';
-  
-export default function CardVertical({ imgSrc, title, institution, degree, textButton }){
+import { Link } from "react-router-dom";
+import { link } from "../../core/constants/link"; 
+export default function CardVertical({ imgSrc, title, institutionName, price, textButton, subjectId }){
     return (
         <>
             <Card style={{ width: '18rem', height: '100%', margin: 20}}>
@@ -23,10 +24,15 @@ export default function CardVertical({ imgSrc, title, institution, degree, textB
                         whiteSpace: 'nowrap', 
                         overflow: 'hidden', 
                         textOverflow: 'ellipsis' 
-                    }}>{institution}</Card.Text>
+                    }}>{institutionName}</Card.Text>
 
-                    <Card.Text>{degree}</Card.Text>
-                    <Button variant="primary">{textButton}</Button>
+                    <Card.Text>{price || 'Freeds'}</Card.Text>
+                    
+                    <Link to = {`${link.trainee}${link.traineeSubjectDetail}/${subjectId}`}>
+                        <Button className="button primary">
+                            {textButton}
+                        </Button>
+                    </Link>
                 </Card.Body>
             </Card>
         </>

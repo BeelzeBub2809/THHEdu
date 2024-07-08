@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const { chapterType } = require('../constants/types')
 const { Schema } = mongoose
 const chapterSchema = new Schema({
   title: {
@@ -7,6 +8,10 @@ const chapterSchema = new Schema({
   },
   attachments: {
     type: String
+  },
+  type: {
+    type: Number,
+    enum: [chapterType.LECTURE, chapterType.VIDEO, chapterType.QUIZ]
   },
   isActive: {
     type: Boolean,
