@@ -44,4 +44,16 @@ export const menu = [
         iconUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/f1170514c93b87b2f66d1a5f8546ed28c6542845d5b95a560fded4cc18694e75?apiKey=5dd4f9cda63a40ecb7fdb7955805b9bd&",
         allowedRoles: [role.TRAINEE]
     },
+    {
+        label: 'Assignment',
+        url: link.trainerDashboard,
+        iconUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/f1170514c93b87b2f66d1a5f8546ed28c6542845d5b95a560fded4cc18694e75?apiKey=5dd4f9cda63a40ecb7fdb7955805b9bd&",
+        allowedRoles: [role.TRAINER]
+    },
+    {
+        label: 'Trainee',
+        url: link.trainerTraineeList,
+        iconUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/f1170514c93b87b2f66d1a5f8546ed28c6542845d5b95a560fded4cc18694e75?apiKey=5dd4f9cda63a40ecb7fdb7955805b9bd&",
+        allowedRoles: [role.TRAINER]
+    },
 ];
