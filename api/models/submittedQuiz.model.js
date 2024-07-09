@@ -5,8 +5,8 @@ const submittedQuiz = new Schema({
     type: Number
   },
   choice: [{
-    type: String,
-    trim: true
+    questionId: String,
+    choicePerQuestion: []
   }],
   traineeId: {
     type: Schema.ObjectId,

@@ -37,28 +37,21 @@ export default function QuestionPracticeScreen () {
         }
     };
 
-    const onClickNext = () => {
-        submittedQuiz.choice.push( { choicePerQuestion: currentChoice});
-
+    const onClickNext = (isGetChoice) => {
+        submittedQuiz.choice.push( { questionId: currentQuestion.questionId, choicePerQuestion: isGetChoice ? currentChoice : []});
+        
         if (activeQuestion !== questionList.length - 1) {
             setActiveQuestion((prev) => prev + 1)
+            setCurrentChoice([]);
         } else {
             const timeTaken = 10; // total time - remain time 
             submittedQuiz.time = timeTaken;
+            handleSubmitQuiz();
         }
-        setCurrentChoice([]);
     };
 
-    const onClickSkip = () => {
-        submittedQuiz.choice.push( { choicePerQuestion: []});
-
-        if (activeQuestion !== questionList.length - 1) {
-            setActiveQuestion((prev) => prev + 1)
-        } else {
-            const timeTaken = 10; // total time - remain time 
-            submittedQuiz.time = timeTaken;
-        }
-        setCurrentChoice([]);
+    const handleSubmitQuiz = () => {
+        //call API to submit result quiz
     }
 
     return (
@@ -83,13 +76,13 @@ export default function QuestionPracticeScreen () {
                         activeQuestion !== quizDetails.totalQuestions - 1 && 
                             <button
                                 style = {styles.button}
-                                onClick = {onClickSkip}>
+                                onClick = {() => onClickNext(false)}>
                                 {'Skip'}
                             </button>
                     }
                     <button 
                         style = {styles.button}
-                        onClick = {onClickNext}
+                        onClick = {() => onClickNext(true)}
                         disabled = {currentChoice.length === 0}>
                         {activeQuestion === quizDetails.totalQuestions - 1 ? 'Finish' : 'Next'}
                     </button>
@@ -160,26 +153,28 @@ const styles = {
 
 const questionList = [
     {
-      questionContent: 'Khong lam ma doi co an thi an ..., an ...',
-      code: '',
-      image: '',
-      answer: [
-            {
-                answerContent: 'chao/com',
-                isCorrected: true
-            },
-            {
-                answerContent: 'cut/duoi bau',
-                isCorrected: false
-            },
-            {
-                answerContent: 'mixue/com Mai Linh',
-                isCorrected: false
-            }
-        ],
-      type: 'MAQ',
+        questionId: 1,
+        questionContent: 'What is software modeling?',
+        code: '',
+        image: '',
+        answer: [
+                {
+                    answerContent: 'Developing models of software.',
+                    isCorrected: true
+                },
+                {
+                    answerContent: 'Designing software applications before coding.',
+                    isCorrected: false
+                },
+                {
+                    answerContent: 'Developing software diagrams.',
+                    isCorrected: false
+                }
+            ],
+        type: 'MAQ',
     },
     {
+        questionId: 2,
         questionContent: 'React components must always return a single JSX element.',
         answer: [
             {
@@ -194,6 +189,7 @@ const questionList = [
         type: 'boolean',
     },
     {
+        questionId: 3,
         questionContent: 'Which of the following are valid React lifecycle methods? (Select all that apply)',
         answer: [
             {
@@ -227,12 +223,15 @@ const quizDetails = {
 const submittedQuiz = {
     choice: [
         // {
+        //     questionId: 1,
         //     choicePerQuestion: [ 'cut/duoi bau']
         // },
         // {
+        //     questionId: 2,
         //     choicePerQuestion: ['True']
         // },
         // {
+        //     questionId: 3,
         //     choicePerQuestion: ['componentWillUpdate','componentDidUpdate']
         // }
     ],

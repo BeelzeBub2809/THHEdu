@@ -10,3 +10,5 @@ export const status = {
     INACTIVE: 0,
     ACTIVE: 1,
 }
+
+export const MIN_TIME_LEARN_VIDEO = 70;

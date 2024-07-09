@@ -4,7 +4,7 @@ export const AddLeadingZero = (number) => {
 }
   
   // Hàm tiện ích để định dạng thời gian còn lại dưới dạng phút:giây
-export function FormatTime(time) {
+export const FormatTime = (time) => {
     const minutes = Math.floor(time / 60);
     const seconds = time % 60;
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
