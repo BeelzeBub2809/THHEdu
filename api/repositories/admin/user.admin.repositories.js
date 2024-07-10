@@ -19,16 +19,26 @@ async function createUser({ email, password, fullname, phone, avatar, status, ro
   const newUser = await DbUser.create(User)
   return newUser
 }
-async function getAllUser({ page, size, searchString }) {
+async function getRoleIdsByName(roleName) {
+  const roles = await DbRole.find({ name: { $in: roleName } });
+  return roles.map(role => role._id);
+}
+async function getAllUserWithSearchAndPaginated({ page, size, searchString, roleFilter, statusFilter }) {
   let query = {}
   if (searchString) {
-    query = {
-      $or: [
-        { email: { $regex: `.*${searchString}.*`, $options: 'i' } },
-        { fullname: { $regex: `.*${searchString}.*`, $options: 'i' } },
-        { phone: { $regex: `.*${searchString}.*`, $options: 'i' } }
-      ]
-    };
+    query.$or = [
+      { email: { $regex: `.*${searchString}.*`, $options: 'i' } },
+      { fullname: { $regex: `.*${searchString}.*`, $options: 'i' } },
+      { phone: { $regex: `.*${searchString}.*`, $options: 'i' } }
+    ];
+  }
+
+  if (roleFilter) {
+    const roleIds = await getRoleIdsByName([roleFilter]);
+    query.roles = { $in: roleIds };
+  }
+  if (statusFilter === 'true' || statusFilter === 'false') {
+    query.status = statusFilter === 'true';
   }
   const users = await DbUser.find(query)
     .skip((page - 1) * size)
@@ -39,6 +49,26 @@ async function getAllUser({ page, size, searchString }) {
     roles: user.roles.map(role => role.name)
   }))
   return filteredUsers
+}
+async function getFilteredUsersCount({searchString, roleFilter, statusFilter}) {
+  let query = {};
+
+  if (searchString) {
+    query.$or = [
+      { email: { $regex: `.*${searchString}.*`, $options: 'i' } },
+      { fullname: { $regex: `.*${searchString}.*`, $options: 'i' } },
+      { phone: { $regex: `.*${searchString}.*`, $options: 'i' } }
+    ];
+  }
+  if (roleFilter) {
+    const roleIds = await getRoleIdsByName([roleFilter]);
+    query.roles = { $in: roleIds };
+  }
+  if (statusFilter === 'true' || statusFilter === 'false') {
+    query.status = statusFilter === 'true';
+  }
+  const count = await DbUser.countDocuments(query);
+  return count;
 }
 async function getDetailUser(userId) {
   const user = await DbUser.findById(userId).populate('roles')
@@ -54,7 +84,6 @@ async function getDetailUser(userId) {
 async function updateUser({id, email, password, fullname, phone, avatar, status, roles }) {
   const roleObjs = await DbRole.find({ name: { $in: roles } }).exec()
   const roleIds = roleObjs.map(r => r._id.toString())
-  console.log(roleIds);
   const updatedUser = await DbUser.findByIdAndUpdate(
     id,
     {
@@ -75,6 +104,6 @@ async function updateUser({id, email, password, fullname, phone, avatar, status,
   return updatedUser
 }
 const userAdminRepo = {
-  createUser, getAllUser, getDetailUser, updateUser
+  createUser, getDetailUser, updateUser, getAllUserWithSearchAndPaginated, getFilteredUsersCount
 }
 module.exports = userAdminRepo
