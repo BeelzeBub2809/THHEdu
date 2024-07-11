@@ -2,8 +2,11 @@ import './userManage.css'
 import { useState, useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEdit, faUserPlus } from '@fortawesome/free-solid-svg-icons'
+import { Pagination } from '../../shared/components/pagination'
+import { UserService } from '../../core/services/user.service'
 
 export default function UserManagement() {
+
   const [data, setData] = useState([])
   const [search, setSearch] = useState('')
   const [showModal, setShowModal] = useState(false)
@@ -19,14 +22,19 @@ export default function UserManagement() {
   const [selectedUserId, setSelectedUserId] = useState(null)
   const [emailError, setEmailError] = useState('')
   const [phoneError, setPhoneError] = useState('')
+
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch(`http://localhost:9999/admin/user/list?page=${page}&size=${size}&searchString=${search}&roleFilter=${filterValue}&statusFilter=${filterStatus}`)
-        if (!response.ok) {
-          throw new Error('Network response was not ok')
+        let searchConditions = {
+          page: page,
+          size: size,
+          searchString: search,
+          roleFilter: filterValue,
+          statusFilter: filterStatus,
         }
-        const data = await response.json()
+
+        const data = await UserService.getAllUsers(searchConditions);
         setData(data.users)
         setMaxPage(data.maxPage)
         setSize(parseInt(data.size))
@@ -36,6 +44,7 @@ export default function UserManagement() {
     }
     fetchUsers()
   }, [page, size, search, filterValue, filterStatus])
+
   useEffect(() => {
     if(selectedUserId){
       const fetchUserDetail = async () => {
@@ -53,11 +62,13 @@ export default function UserManagement() {
       fetchUserDetail()
     }
   }, [selectedUserId])
+
   useEffect(()=>{
     return () => {
       imagePreview && URL.revokeObjectURL(imagePreview)
     }
   },[imagePreview])
+
   const handleSearch = (event) => {
     setSearch(event.target.value)
   }
@@ -115,6 +126,7 @@ export default function UserManagement() {
       setPhoneError('')
     }
   }
+
   return (
     <div className="container-fluid">
       <div className='content'>
@@ -189,14 +201,12 @@ export default function UserManagement() {
             </tbody>
           </table>
         </div>
-        <div className="pagination-container">
-          <span>Showing {size} data in a page</span>
-          <Pagination
-            totalPages={maxPage}
-            currentPage={page}
-            setPage={setPage}
-          />
-        </div>
+        <Pagination
+          size = {size}
+          totalPages={maxPage}
+          currentPage={page}
+          setPage={setPage}
+        />
       </div>
       {showModal && (
         <>
@@ -286,26 +296,4 @@ export default function UserManagement() {
       )}
     </div>
   )
-}
-
-const Pagination = ({ totalPages, currentPage, setPage }) => {
-  const pageNumbers = [];
-
-  for (let i = 1; i <= totalPages; i++) {
-    pageNumbers.push(i);
-  }
-
-  return (
-    <nav>
-      <ul className="pagination justify-content-end">
-        {pageNumbers.map(number => (
-          <li key={number} className={`page-item ${number === currentPage ? 'active' : ''}`}>
-            <button onClick={() => setPage(number)} className="page-link">
-              {number}
-            </button>
-          </li>
-        ))}
-      </ul>
-    </nav>
-  );
 }
