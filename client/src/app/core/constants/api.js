@@ -1,5 +1,5 @@
 export const api = {
     login: '/auth/login',
-
-    learningQuiz: '/trainee/info-quiz'
+    getUsers: '/admin/user/list',
+    learningQuiz: '/trainee/info-quiz',
 };

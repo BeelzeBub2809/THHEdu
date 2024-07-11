@@ -21,13 +21,14 @@ async function createUser(req, res, next) {
 }
 async function getAllUser(req,res,next){
   try {
-    let {page=1, size=15, searchString, roleFilter, statusFilter} = req.query
+    let {page, size, searchString, roleFilter, statusFilter} = req.body
     size = parseInt(size) >= 15 ? 15 : parseInt(size)
     page = parseInt(page)
     const listUsers = await userAdminRepo.getAllUserWithSearchAndPaginated({page, size, searchString, roleFilter, statusFilter})
     const countUser = await userAdminRepo.getFilteredUsersCount({searchString, roleFilter, statusFilter})
     const maxPage = Math.ceil(countUser/size)
     res.status(200).json({
+      page: page,
       size: size,
       maxPage: maxPage,
       users: listUsers
