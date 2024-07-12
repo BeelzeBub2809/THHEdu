@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEdit, faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import { Pagination } from '../../shared/components/pagination'
 import { UserService } from '../../core/services/user.service'
+import Swal from 'sweetalert2'
 
 export default function UserManagement() {
 
@@ -22,6 +23,13 @@ export default function UserManagement() {
   const [selectedUserId, setSelectedUserId] = useState(null)
   const [emailError, setEmailError] = useState('')
   const [phoneError, setPhoneError] = useState('')
+  const [passwordError, setPasswordError] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [fullName, setFullName] = useState('')
+  const [phone, setPhone] = useState('')
+  const [avatar, setAvatar] = useState('')
+  const [status, setStatus] = useState('')
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -34,7 +42,7 @@ export default function UserManagement() {
           statusFilter: filterStatus,
         }
 
-        const data = await UserService.getAllUsers(searchConditions);
+        const data = await UserService.getAllUsers(searchConditions)
         setData(data.users)
         setMaxPage(data.maxPage)
         setSize(parseInt(data.size))
@@ -55,6 +63,16 @@ export default function UserManagement() {
           }
           const data = await response.json()
           setSelectedUser(data)
+          setFullName(data.fullname)
+          setEmail(data.email)
+          setPhone(data.phone)
+          setStatus(data.status)
+          setRoles(data.roles)
+          if (data.avatar) {
+            setImagePreview(`/uploads/avatar/${data.avatar}`)
+          } else {
+            setImagePreview('https://static.vecteezy.com/system/resources/previews/000/439/863/original/vector-users-icon.jpg')
+          }
         } catch (err) {
           console.log(err)
         }
@@ -76,27 +94,43 @@ export default function UserManagement() {
   const handleAddUser = () => {
     setCurrentAction('add')
     setShowModal(true)
+    setSelectedUser(null)
+    setFullName('')
+    setEmail('')
+    setPhone('')
+    setStatus('Active')
+    setRoles([])
+    setImagePreview('https://static.vecteezy.com/system/resources/previews/000/439/863/original/vector-users-icon.jpg')
   }
 
   const handleCloseModal = () => {
     setShowModal(false)
     setCurrentAction('')
-    setSelectedUser(null)
-    setImagePreview('https://static.vecteezy.com/system/resources/previews/000/439/863/original/vector-users-icon.jpg')
     setRoles([])
     setEmailError('')
     setPhoneError('')
+    setImagePreview('https://static.vecteezy.com/system/resources/previews/000/439/863/original/vector-users-icon.jpg')
   }
 
   const handleViewUser = (user) => {
     setSelectedUserId(user._id)
     setCurrentAction('view')
     setShowModal(true)
+    if(user.avatar){
+      setImagePreview(`/uploads/avatar/${user.avatar}`)
+    }
   }
 
   const handleUpdateUser = (user) => {
-    setSelectedUser(user)
+    setSelectedUserId(user._id)
+    setFullName(user.fullname)
+    setEmail(user.email)
+    setPhone(user.phone)
+    setStatus(user.status)
     setRoles(user.roles)
+    if(user.avatar){
+      setImagePreview(`/uploads/avatar/${user.avatar}`)
+    }
     setCurrentAction('update')
     setShowModal(true)
   }
@@ -107,6 +141,7 @@ export default function UserManagement() {
       file.preview = URL.createObjectURL(file)
       setImagePreview(file.preview)
     }
+    setAvatar(file)
   }
 
   const validateEmail = (email) => {
@@ -116,6 +151,7 @@ export default function UserManagement() {
     } else {
       setEmailError('')
     }
+    setEmail(email)
   }
   
   const validatePhone = (phone) => {
@@ -124,6 +160,71 @@ export default function UserManagement() {
       setPhoneError('Phone number must be 10 digits and start with 0')
     } else {
       setPhoneError('')
+    }
+    setPhone(phone)
+  }
+
+  const validatePassword = (password) => {
+    const passwordRegex = /^(?=.*\d)(?=.*[a-zA-Z])(?=.*[\W_])\S{8,}$/
+    if (!passwordRegex.test(password)) {
+      setPasswordError('Password must contain 8-20 characters (no spaces) and at least one number, one letter and one special character')
+    } else {
+      setPasswordError('')
+    }
+    setPassword(password)
+  }
+
+  const handleSubmit = async(e) => {
+    e.preventDefault()
+    if (emailError !== '' || phoneError !=='' || (currentAction === 'add' && passwordError!=='')) {
+      return;
+    }
+    const formData = new FormData()
+    formData.append('email', email)
+    if (currentAction === 'add') {
+      formData.append('password', password)
+    }
+    formData.append('fullname', fullName)
+    formData.append('phone', phone)
+    if (avatar) {
+      formData.append('avatar', avatar)
+    }
+    formData.append('status', status ? 'true' : 'false')
+    roles.forEach(role => formData.append('roles', role))
+    try {
+      let response;
+      if (currentAction === 'add') {
+        console.log(status);
+        response = await fetch('http://localhost:9999/admin/user/create', {
+          method: 'POST',
+          body:formData
+        })
+      } else if (currentAction === 'update') {
+        response = await fetch(`http://localhost:9999/admin/user/${selectedUserId}`, {
+          method: 'POST',
+          body:formData
+        })
+      }
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Network response was not ok')
+      }
+      handleCloseModal()
+      Swal.fire({
+        title: 'Success',
+        icon: 'success',
+        confirmButtonText: 'Ok',
+      }).then(() => {
+        window.location.reload()
+      })
+    } catch (error) {
+      console.log(error)
+      Swal.fire({
+        title: 'Error',
+        text: error.message,
+        icon: 'error',
+        confirmButtonText: 'Ok'
+      })
     }
   }
 
@@ -193,7 +294,7 @@ export default function UserManagement() {
                   </td>
                   <td>
                     <span className={`badge ${item.status ? 'bg-success' : 'bg-danger'}`}>
-                      {item.status ? 'Active' : 'Banned'}
+                      {item.status ? 'Active' : 'Inactive'}
                     </span>
                   </td>
                 </tr>
@@ -220,7 +321,7 @@ export default function UserManagement() {
                 <div className="modal-body">
                   <div className="d-flex" style={{gap:'20px'}}>
                     <div className='d-flex' style={{width:'80%', flexDirection:'column', alignItems:'center'}}>
-                      <img src={imagePreview || (selectedUser?.avatar|| 'https://static.vecteezy.com/system/resources/previews/000/439/863/original/vector-users-icon.jpg')} alt="User" className="avatar" />
+                      <img src={imagePreview || 'https://static.vecteezy.com/system/resources/previews/000/439/863/original/vector-users-icon.jpg'} alt="User" className="avatar" />
                       <div className="mt-3">
                         {currentAction !== 'view' && (
                         <div className="mt-3">
@@ -230,34 +331,35 @@ export default function UserManagement() {
                       )}
                       </div>
                     </div>
-                    <form className="w-100">
+                    <form className="w-100" onSubmit={handleSubmit}>
                       <div className="form-group mb-3">
                         <label>Full name</label>
-                        <input type="text" className="form-control" value={selectedUser?.fullname || ''} disabled={currentAction === 'view'}/>
+                        <input type="text" className="form-control" onChange={(e) => setFullName(e.target.value)} value={fullName} disabled={currentAction === 'view'}/>
                       </div>
                       <div className="form-group mb-3">
                         <label>Email</label>
-                        <input type="email" className="form-control" value={selectedUser?.email || ''} disabled={currentAction === 'view'} 
-                        onChange={(e) => {
-                          const email = e.target.value
-                          validateEmail(email);
-                          setSelectedUser({ ...selectedUser, email });}}/>
+                        <input type="email" className="form-control" value={email} disabled={currentAction === 'view'} 
+                        onChange={(e) => validateEmail(e.target.value)}/>
                         {emailError && <div className="text-danger">{emailError}</div>}
                       </div>
                       <div className="form-group mb-3">
                         <label>Phone</label>
-                        <input type="text" className="form-control" value={selectedUser?.phone || ''} disabled={currentAction === 'view'} onChange={(e) => {validatePhone(e.target.value)}}/>
+                        <input type="text" className="form-control" value={phone} 
+                        disabled={currentAction === 'view'} 
+                        onChange={(e) => validatePhone(e.target.value)}/>
                         {phoneError && <div className="text-danger">{phoneError}</div>}
                       </div>
                       {currentAction === 'add' && (
                         <div className="form-group mb-3">
                           <label>Password</label>
-                          <input type="password" className="form-control" />
+                          <input type="password" className="form-control" onChange={(e) => {validatePassword(e.target.value)}}/>
+                          {passwordError && <div className="text-danger">{passwordError}</div>}
                         </div>
                       )}
                       <div className="form-group mb-3">
                         <label>Status</label>
-                        <select className="form-select" value={selectedUser?.status || ''} disabled={currentAction === 'view'}>
+                        <select className="form-select" value={status ? 'Active' : 'Inactive'} disabled={currentAction === 'view'}
+                        onChange={(e) => setStatus(e.target.value === 'Active')}>
                           <option value="Active">Active</option>
                           <option value="Inactive">Inactive</option>
                         </select>
@@ -280,15 +382,16 @@ export default function UserManagement() {
                           </select>
                         </div>
                       )}
+                        <div className="modal-footer">
+                          <button type="button" className="btn btn-secondary" onClick={handleCloseModal}>Back</button>
+                          {currentAction !== 'view' && (
+                            <button type="submit" className="btn btn-success" disabled={emailError !== '' || phoneError !== '' || (currentAction === 'add'&&passwordError !== '')}>{currentAction === 'add' ? 'Add' : 'Save'}</button>
+                          )}
+                        </div>
                     </form>
                   </div>
                 </div>
-                <div className="modal-footer">
-                  <button type="button" className="btn btn-secondary" onClick={handleCloseModal}>Back</button>
-                  {currentAction !== 'view' && (
-                    <button type="button" className="btn btn-success" disabled={emailError !== '' || phoneError !== ''}>{currentAction === 'add' ? 'Add' : 'Save'}</button>
-                  )}
-                </div>
+                
               </div>
             </div>
           </div>

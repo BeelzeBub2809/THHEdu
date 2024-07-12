@@ -9,12 +9,12 @@ async function createUser(req, res, next) {
       password,
       fullname,
       phone,
-      avatar,
       status,
       roles
     } = req.body
+    const avatar = req.file ? req.file.filename : ''
     const newUser = await userAdminRepo.createUser({email,password,fullname,phone,avatar,status,roles})
-    res.status(200).json(newUser)
+    res.status(201).json(newUser)
   } catch (error) {
     next(error)
   }
@@ -60,12 +60,12 @@ async function updateUser(req, res, next) {
       password,
       fullname,
       phone,
-      avatar,
       status,
       roles
     } = req.body
+    const avatar = req.file ? req.file.filename : ''
     const updatedUser = await userAdminRepo.updateUser({id,email,password,fullname,phone,avatar,status,roles})
-    res.status(200).json(updatedUser)
+    res.status(201).json(updatedUser)
   } catch (error) {
     next(error)
   }
