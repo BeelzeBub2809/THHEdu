@@ -13,7 +13,7 @@ const subjectSchema = new Schema({
   isActive: {
     type: Boolean
   },
-  managerId: {
+  manager: {
     type: Schema.ObjectId,
     ref: 'User',
     required: true

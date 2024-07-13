@@ -7,8 +7,8 @@ export const role = {
 }
 
 export const status = {
-    INACTIVE: 0,
-    ACTIVE: 1,
+    INACTIVE: false,
+    ACTIVE: true,
 }
 
 export const MIN_TIME_LEARN_VIDEO = 70;

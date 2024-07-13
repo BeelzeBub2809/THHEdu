@@ -3,37 +3,36 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEdit, faTrash, faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import './css/list.css'
 import { AuthService }from '../../core/services/auth.service'
-import { status } from '../../core/constants/config'
 import CreateSubjectComponent from './create.subject'
 import EditSubjectComponent from './edit.subject'
-
-const mockData = [
-    { id: 1, name: 'SWP', user_id: 1, created_by: 'Anh Tuan', email: 'jane@microsoft.com', status: 1 },
-    { id: 2, name: 'FER',user_id: 2, created_by: 'Tuan Hung', email: 'floyd@yahoo.com', status: 0 },
-    { id: 3, name: 'SDN', user_id: 2, created_by: 'Tuan Hung', email: 'ronald@adobe.com', status: 0 },
-    { id: 4, name: 'MAD', user_id: 2,created_by: 'Tuan Hung', email: 'marvin@tesla.com', status: 1 },
-    { id: 5, name: 'MAE', user_id: 1, created_by: 'Anh Tuan', email: 'jerome@google.com', status: 0 },
-    { id: 6, name: 'TRS6', user_id: 1, created_by: 'Anh Tuan', email: 'kathryn@microsoft.com', status: 1 },
-    { id: 7, name: 'LUK5', user_id: 2,created_by: 'Tuan Hung', email: 'jacob@yahoo.com', status: 1 },
-    { id: 8, name: 'OSG', user_id: 3, created_by: 'Trong Huu', email: 'kristin@facebook.com', status: 0 },
-  ];
+import { SubjectService } from '../../core/services/subject.service'
+import { Pagination } from '../../shared/components/pagination'
+import ViewSubjectComponent from './view.subject'
 
   export default function ListSubjectComponent(){
     
-    const [data, setData] = useState(mockData);
-    const [search, setSearch] = useState('');
+    const [data, setData] = useState([]);
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
+    const [showViewModal, setShowViewModal] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
-    const [filterConditions, setFiterConditions] = useState({author: 'me'});
+    const [filterConditions, setFiterConditions] = useState({author: 'me', searchString: ''});
+    const [page, setPage] = useState(1);
+    const [maxPage, setMaxPage] = useState(0);
+    const [size, setSize] = useState(15);
+
     const user_detail = AuthService.getUserDetail() || { user_id: 1};
 
     const handleSearch = (event) => {
-        setSearch(event.target.value);
+        setFiterConditions({...filterConditions, searchString: event.target.value});
     };
 
     const handleCloseCreateModal = () => {
         setShowCreateModal(false);
+    }
+
+    const handleCloseViewModal = () => {
+        setShowViewModal(false);
     }
 
     const handleCloseEditModal = () => {
@@ -48,13 +47,21 @@ const mockData = [
     }
 
     useEffect(() => {
-        let fetchedData = fetchData();
-        setData(fetchedData.filter(p => filterConditions.author === 'others' || p.user_id === user_detail.user_id));
-    }, [filterConditions]);
+        const fetchData = async () => {
+            let searchConditions = {
+                page: page,
+                size: size,
+                managerId: filterConditions.author === 'me' ? user_detail.user_id : '',
+                searchString: filterConditions.searchString,
+            }
 
-    const fetchData = () => {
-        return mockData;
-    }
+            let data = await SubjectService.getAllSubjects(searchConditions);
+            setData(data.subjects);
+            setSize(data.pagination.size);
+            setMaxPage(data.pagination.maxPage);
+        }
+        fetchData();
+    }, [page, size, filterConditions]); 
 
     return (
         <div className="container-fluid">
@@ -64,8 +71,8 @@ const mockData = [
                     <div>
                         <label className="me-2">Show by:</label>
                         <select className="form-select d-inline-block w-auto" name = "author" onChange={handleSortChange}>
-                            <option value="me">Created by me</option>
-                            <option value="others">Other authors</option>
+                            <option value="me">Manage by me</option>
+                            <option value="others">Other managers</option>
                         </select>
                     </div>
                     <div className="d-flex align-items-center">
@@ -73,8 +80,7 @@ const mockData = [
                         type="text"
                         className="form-control me-2"
                         placeholder="Search"
-                        value={search}
-                        onChange={handleSearch}
+                        onBlur={(e) => handleSearch(e)}
                     />
                     <button className="btn btn-primary" onClick={() => setShowCreateModal(true)}>
                         <FontAwesomeIcon icon={faUserPlus}/>
@@ -85,22 +91,24 @@ const mockData = [
                     <table className="table table-hover table-responsive">
                     <thead>
                         <tr>
-                            <th>Name subject</th>
-                            <th>Created by</th>
+                            <th>Subject Code</th>
+                            <th>Subject Name</th>
+                            <th>Manager</th>
                             <th>Action</th>
                             <th>Status</th>
                         </tr>
                     </thead>
                     <tbody>
                         {data.map((item) => (
-                        <tr key={item.id}>
-                            <td>{item.name}</td>
-                            <td>{item.created_by}</td>
+                        <tr key={item._id}>
+                            <td>{item.subjectCode}</td>
+                            <td>{item.subjectName}</td>
+                            <td>{item.manager.fullname}</td>
                             <td>
-                                <button className="btn btn-link p-0 me-2" onClick={()=>{ setSelectedItem(item); setShowCreateModal(true)}}>
+                                <button className="btn btn-link p-0 me-2" onClick={()=>{ setSelectedItem(item); setShowViewModal(true)}}>
                                     <FontAwesomeIcon icon={faEye}/>
                                 </button>
-                                <button className="btn btn-link p-0 me-2" onClick={()=>{ setSelectedItem(item); setShowCreateModal(true)}}>
+                                <button className="btn btn-link p-0 me-2" onClick={()=>{ setSelectedItem(item); setShowEditModal(true)}}>
                                     <FontAwesomeIcon icon={faEdit}/>
                                 </button>
                                 <button className="btn btn-link p-0">
@@ -109,7 +117,7 @@ const mockData = [
                             </td>
                             <td>
                                 {
-                                    item.status === status.ACTIVE ? (
+                                    item.isActive ? (
                                         <span className = "badge bg-success">
                                             Active
                                         </span>
@@ -125,21 +133,15 @@ const mockData = [
                     </tbody>
                     </table>
                 </div>
-                <div className="pagination-container">
-                    <span>Showing data 1 to 8 of 256K entries</span>
-                    <nav>
-                    <ul className="pagination justify-content-end">
-                        <li className="page-item"><a className="page-link" href="#">1</a></li>
-                        <li className="page-item"><a className="page-link" href="#">2</a></li>
-                        <li className="page-item"><a className="page-link" href="#">3</a></li>
-                        <li className="page-item"><a className="page-link" href="#">4</a></li>
-                        <li className="page-item"><a className="page-link" href="#">...</a></li>
-                        <li className="page-item"><a className="page-link" href="#">40</a></li>
-                    </ul>
-                    </nav>
-                </div>
+                <Pagination
+                    size = {size}
+                    totalPages={maxPage}
+                    currentPage={page}
+                    setPage={setPage}
+                />
             </div>
             <CreateSubjectComponent showModal={showCreateModal} handleCloseModal={handleCloseCreateModal}/>
+            <ViewSubjectComponent showModal={showViewModal} handleCloseModal={handleCloseViewModal} item = {selectedItem}/>
             <EditSubjectComponent showModal={showEditModal} handleCloseModal={handleCloseEditModal} item = {selectedItem}/>
         </div>
     )

@@ -1,13 +1,27 @@
 export class UltisService {
 
-    static setUrlValueParams(url, pars) {
-        if(pars === undefined || pars.length == 0){
+    //url: /admin/user/:id           params: { id: 1}
+    //res: /admin/user/1
+    static setUrlValueParams(url, params) {
+        if (Object.keys(params).length === 0) {
             return url;
         }
-        let params = Object.keys(pars)
-            .filter(key => pars[key] !== "")
-            .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(pars[key])}`)
-            .join('&');
-        return url+'?'+params;
+        const arrayParams = url.split('/');
+        const symbols = ['$', ':'];
+        let index = 0;
+        const finalParams = [];
+        arrayParams.forEach(function (value, key) {
+            if (symbols.includes(value.charAt(0))) {
+                const paramKey = Object.keys(params)[index];
+                if (paramKey) {
+                    finalParams[key] = params[paramKey];
+                }
+                ++index;
+            }
+            else {
+                finalParams[key] = value;
+            }
+        });
+        return finalParams.join('/');
     }
 }
