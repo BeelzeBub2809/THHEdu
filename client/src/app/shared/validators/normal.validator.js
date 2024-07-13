@@ -6,6 +6,7 @@ const Validators = {
     email: value => /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(value) ? null : { email: true },
     phoneNumber: value => value && value.trim().length === 10  && /^0\d{9}$/.test(value) ? null : { phoneNumber: true},
     password: value => value && value.trim().length > 0 && /^(?=.*\d)(?=.*[a-zA-Z])(?=.*[\W_])\S{8,}$/.test(value) ? null : { password: true },
+    number: value => value && /^\d+(\.\d{1,2})?$/.test(value) ? null : { price: true },
 };
 
 export default Validators;

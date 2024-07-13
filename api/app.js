@@ -6,14 +6,22 @@ const cors = require('cors')
 require('dotenv').config()
 const db = require('./repositories/connectDB');
 const { UserRouter } = require('./routes/admin/admin.routes');
+const SubjectRouter = require('./routes/subject.router');
 
 const app = express();
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(cors())
+app.use(cors({
+  origin: 'http://localhost:'+process.env.PORT_CLIENT,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
 app.use('/admin/user', UserRouter);
+app.use('/subject', SubjectRouter);
+
 app.use((req, res, next) => {
   next(httpError(404, 'Not Found'));
 });

@@ -103,7 +103,12 @@ async function updateUser({id, email, password, fullname, phone, avatar, status,
   )
   return updatedUser
 }
+
+async function getUserIdByQuery(query){
+  let listUserId = await DbUser.find(query);
+  return listUserId.map(user => user._id );
+}
 const userAdminRepo = {
-  createUser, getDetailUser, updateUser, getAllUserWithSearchAndPaginated, getFilteredUsersCount
+  createUser, getDetailUser, updateUser, getAllUserWithSearchAndPaginated, getFilteredUsersCount, getUserIdByQuery
 }
 module.exports = userAdminRepo

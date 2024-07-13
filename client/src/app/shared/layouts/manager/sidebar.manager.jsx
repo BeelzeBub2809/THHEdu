@@ -20,8 +20,8 @@ function SidebarManager(){
             <aside className="sidebar">
                 { menu.map((item, index) => (
                     item.allowedRoles.includes(userRole) && (
-                        <div>
-                            <Link key = {index}
+                        <div key = {index}>
+                            <Link 
                                 to= {item.url}
                                 className={`sidebar-section ${activeSection === item.label ? 'active' : ''}`}
                                 onClick={() => handleSectionClick(item.label)}
