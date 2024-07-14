@@ -1,5 +1,7 @@
 const mongoose = require('mongoose')
 const { Schema } = mongoose
+const { questionType } = require('../constants/types')
+
 const questionSchema = new Schema({
   questionName: {
     type: String,
@@ -17,11 +19,11 @@ const questionSchema = new Schema({
   chapterId: {
     type: Schema.ObjectId,
     ref: 'Chapter',
-    required: true
   },
   type: {
     type: String, 
     required: true,
+    enum: [questionType.MCQ, questionType.MAQ, questionType.BOOLEAN]
   },
   image: {
     type: String,
@@ -36,6 +38,9 @@ const questionSchema = new Schema({
     },
     isCorrected: Boolean
   }],
+  explain: {
+    type: String,
+  },
   createBy: {
     type: Schema.ObjectId,
     ref: 'User'

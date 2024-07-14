@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const chapterType = require('../constants/types')
+const { chapterType } = require('../constants/types')
 const { Schema } = mongoose
 const chapterSchema = new Schema({
   title: {

@@ -1,5 +1,6 @@
 const Validators = {
     required: value => value ? null : { required: true },
+    requiredString: value => value.trim().length > 0 ? null : {required : true},
     minLength: min => value => value.trim().length >= min ? null : { minLength: { requiredLength: min, actualLength: value.length } },
     maxLength: max => value => value.trim().length <= max ? null : { maxLength: { requiredLength: max, actualLength: value.length } },
     pattern: regex => value => regex.test(value) ? null : { pattern: { requiredPattern: regex, actualValue: value } },
