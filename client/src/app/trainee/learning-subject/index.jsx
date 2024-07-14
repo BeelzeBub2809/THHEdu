@@ -10,6 +10,7 @@ import PageCenterGlobalComponent from '../../shared/global/page-center.global';
 import VideoPlaying from '../../shared/components/video.playing'
 import { MIN_TIME_LEARN_VIDEO } from '../../core/constants/config';
 import { theme } from '../../shared/styles/theme.style';
+import { ChapterService } from '../../core/services/chapter.service';
 
 const joinedSubjectDataTest = {
     subjectId: 1,
@@ -22,24 +23,32 @@ function LearnSubjectComponent(){
     const navigation = useNavigate();
 
     const { subjectId: subjectId } = useParams();
-
     const [isShowMenuChapter, setIsShowChaterList] = useState(true);
-    const [currentChapter, setCurrentChapter] = useState(chapterMenuDataTest[0]);
+    const [listChapters, setListChapters] = useState(); 
+    const [currentChapter, setCurrentChapter] = useState();
 
     //WARNING: Delete after done backend: Call API to get data from with par: traineeId(userId), sujectId
     const [learnedChapters, setLeanredChapters] = useState(joinedSubjectDataTest.learnedChapter);
-    const [listChapters, setListChapters] = useState(chapterMenuDataTest);
 
-    const handleSelectChapter = (chapter) => {
-        setCurrentChapter(chapterMenuDataTest.find(c => c.chapterId === chapter.chapterId));
+    useEffect( () => {
+        async function fetchChapter(){
+            let dataChapterFetch = await ChapterService.getChaptersBySubject(subjectId);
+            setListChapters(dataChapterFetch);
+            setCurrentChapter(dataChapterFetch[0]);
+        }
+        fetchChapter();
+    }, [subjectId]);
+
+    const handleSelectChapter = (_id) => {
+        setCurrentChapter(listChapters.find(c => c._id === _id));
     }
 
-    const handleStartQuiz = (quiz) => {
-        navigation(`${link.trainee}${link.traineePracticeQuiz}/${quiz.quizId}`)
+    const handleStartQuiz = (_id) => {
+        navigation(`${link.trainee}${link.traineePracticeQuiz}/${_id}`)
     }
 
-    const handleVideoProgress = (progress ) => {
-        if(progress.played*100 > MIN_TIME_LEARN_VIDEO && !learnedChapters.includes(currentChapter.chapterId)){
+    const handleVideoProgress = (progress) => {
+        if(progress.played*100 > MIN_TIME_LEARN_VIDEO && !learnedChapters.includes(currentChapter._id)){
             //TODO: Call api to save this chapter is learned to DbJoinedSubject
 
             submitLearnedChapter();
@@ -51,19 +60,19 @@ function LearnSubjectComponent(){
     }
 
     const submitLearnedChapter = () => {
-        setLeanredChapters(prev => [...prev, currentChapter.chapterId]);
+        setLeanredChapters(prev => [...prev, currentChapter._id]);
     }
 
     const menuComponent = () => {
         return(
             <Col className='col-3'>
                 {
-                    listChapters.map( (chapter, index ) => {
+                    listChapters && listChapters.map( (chapter, index ) => {
                         return (
                             <div key={index} >
                                 <div className="btn btn-light w-100 text-start rounded-0 p-3 border-bottom d-flex"
-                                    style={{backgroundColor: learnedChapters.includes(chapter.chapterId) ? theme.colors.successLight : ''}}
-                                    onClick={() => handleSelectChapter(chapter)}
+                                    style={{backgroundColor: learnedChapters.includes(chapter._id) ? theme.colors.successLight : ''}}
+                                    onClick={() => handleSelectChapter(chapter._id)}
                                 >
                                     <img src = {
                                         chapter.type == chapterType.LECTURE ? tempUrlIconDataTest.lecture
@@ -84,11 +93,11 @@ function LearnSubjectComponent(){
         return(
             <div className="pt-5 pb-5">
                 {
-                    currentChapter.attachment
+                    currentChapter.content
                 }
                 <div className="text-center">
                     {
-                        !learnedChapters.includes(currentChapter.chapterId) 
+                        !learnedChapters.includes(currentChapter._id) 
                             ? <Button onClick={()=>handleMarkCompleted()} variant="primary" size="lg">Mark Completed</Button>
                             : <Button disabled variant="primary" size="lg">Completed</Button>
                     }
@@ -101,7 +110,7 @@ function LearnSubjectComponent(){
         return(
             <Container className="mt-5">
                 <VideoPlaying
-                    url={currentChapter.attachment}  
+                    url={currentChapter.attachments}  
                     handleVideoProgress={handleVideoProgress}              
                 >
                 </VideoPlaying>
@@ -122,16 +131,14 @@ function LearnSubjectComponent(){
         // let fetchCondition = {
         //     userId: 1,
         //     subjectId: 1,
-        //     chapterId: 1
+        //     _id: 1
         // }
         // call api
         // let quizInfo =  await QuizService.getInfoQuiz(fetchCondition)
-        let quizInfo = quizInfoConstDataTest;
-
         return(
             <Container className="mt-5">
                 {
-                    quizInfo.map( (quiz, index) => {
+                    currentChapter.quizzes.map( (quiz, index) => {
                         return (
                             <Fragment key={index}>
                                 <h1 className="mb-4">{quiz.quizName}</h1>
@@ -143,7 +150,7 @@ function LearnSubjectComponent(){
                                             <p>Time <strong>{quiz.duration} minutes</strong></p>
                                         </div>
                                         <div className="text-center">
-                                            <Button onClick={()=>handleStartQuiz(quiz)} variant="primary" size="lg">Start quiz</Button>
+                                            <Button onClick={()=>handleStartQuiz(quiz._id)} variant="primary" size="lg">Start quiz</Button>
                                         </div>
                                     </div>
                                     <div className='d-flex justify-content-around'>
@@ -151,7 +158,7 @@ function LearnSubjectComponent(){
                                             <h6>Your grade</h6>
                                         </div>
                                         <div className="text-right">
-                                            <strong>2/2 <strong className="text-success">Passed</strong></strong>
+                                            {/* <strong>2/2 <strong className="text-success">Passed</strong></strong> */}
                                         </div>
                                     </div>
                                 </div>
@@ -167,7 +174,7 @@ function LearnSubjectComponent(){
         <Container fluid>
             <Row style={{marginTop: '1.5em'}}>
                 <div className='col-9'>
-                    <h2>{currentChapter.title}</h2>
+                    <h2>{ currentChapter && currentChapter.title}</h2>
                 </div>
                 <div className='col-3'>
                     <Button onClick={() => setIsShowChaterList(!isShowMenuChapter)}>
@@ -178,9 +185,9 @@ function LearnSubjectComponent(){
                 <div className={isShowMenuChapter ? 'col-9' : 'col-12'}>
                 <PageCenterGlobalComponent paddingTop={20}>
                     {
-                        currentChapter.type === chapterType.LECTURE ? lectureComponent() 
+                        currentChapter && (currentChapter.type === chapterType.LECTURE ? lectureComponent() 
                             : currentChapter.type === chapterType.VIDEO ? videoComponent() 
-                            : quizComponent()  
+                            : quizComponent())  
                     }
                 </PageCenterGlobalComponent>
                 </div>
@@ -191,28 +198,6 @@ function LearnSubjectComponent(){
         </Container>
     )
 }
-
-// Call API to get 2 list
-const chapterMenuDataTest = [
-    {
-        chapterId: 1,
-        title: 'Chapter 1',
-        attachment: 'Link 1',
-        type: chapterType.LECTURE,
-    },
-    {
-        chapterId: 2,
-        title: 'Chapter 2',
-        attachment: '',
-        type: chapterType.QUIZ,
-    },
-    { 
-        chapterId: 3,
-        title: 'Chapter 3',
-        attachment: 'https://www.youtube.com/watch?v=-lgr5smz6BU',
-        type: chapterType.VIDEO,
-    }
-]
 
 const tempUrlIconDataTest = {
     lecture: '/assets/icons/lecture.svg',

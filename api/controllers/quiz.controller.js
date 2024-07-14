@@ -34,7 +34,21 @@ async function createQuizBySubject(req,res,next){
     }
 }
 
+async function getQuestionsByQuiz(req,res,next){
+  try {
+      const quizId = req.params.quizId;
+      if (!mongoose.Types.ObjectId.isValid(quizId)) {
+        return res.status(400).json({ message: 'Invalid quiz'});
+      }
+      const listQuestions = await DbQuiz.findOne({_id: quizId}).populate('questionId');
+      
+      res.status(201).json(listQuestions);
+    } catch (error) {
+      next(error)
+    }
+}
+
 const QuizController = {
-    getQuizBySubject, createQuizBySubject
+    getQuizBySubject, createQuizBySubject, getQuestionsByQuiz
 }
 module.exports = QuizController

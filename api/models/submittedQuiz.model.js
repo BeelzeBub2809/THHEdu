@@ -11,13 +11,13 @@ const submittedQuiz = new Schema({
   traineeId: {
     type: Schema.ObjectId,
     ref: 'User',
-    required: true
   },
   quizId: {
     type: Schema.ObjectId,
     ref: 'Quiz',
     required: true,
-  }
+  },
+  time: Number,
 })
 const DbSubmittedQuiz = mongoose.model('SubmittedQuiz', submittedQuiz)
 module.exports = DbSubmittedQuiz

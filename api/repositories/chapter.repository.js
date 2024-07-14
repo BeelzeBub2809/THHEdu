@@ -9,7 +9,7 @@ async function getChapterBySubject({...createCondition}){
         query.type = createCondition.type;
     }
 
-    const listChapter = DbChapter.find(query);
+    const listChapter = DbChapter.find(query).populate('quizzes');
     return !listChapter ? null : listChapter;
 }
 

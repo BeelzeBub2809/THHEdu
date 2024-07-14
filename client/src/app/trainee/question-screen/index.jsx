@@ -1,4 +1,4 @@
-import { React, useState } from 'react';
+import { React, useState, useEffect } from 'react';
 import PageCenterGlobalComponent from '../../shared/global/page-center.global';
 import LogoComponent from '../../shared/icons/logo/logo.icons';
 import { theme } from '../../shared/styles/theme.style';
@@ -6,16 +6,38 @@ import HeaderQuizComponent from './header/header';
 import QuestionComponent from './question';
 import { questionType } from '../../core/constants/type';
 import { useParams } from 'react-router-dom';
+import { QuizService } from '../../core/services/quiz.service';
+import { SubmittedQuizService } from '../../core/services/submitted-quiz.service';
+import Swal from 'sweetalert2'
+import { useNavigate } from 'react-router-dom';
+import { link } from '../../core/constants/link';
 
 export default function QuestionPracticeScreen () {
-    const { quizId } = useParams();
+    const navigation = useNavigate();
 
+    const { quizId } = useParams();
+    const [ questions, setQuestions ] = useState([]);
     const [activeQuestion, setActiveQuestion] = useState(0);
+    const [currentQuestion, setCurrenQuestion] = useState();
     const [currentChoice, setCurrentChoice] = useState([]);
     const [showTimerModal, setShowTimerModal] = useState(false);
     const [showResultModal, setShowResultModal] = useState(false);
-    
-    const currentQuestion = questionList[activeQuestion];
+
+    useEffect ( () => {
+        async function fetchQuestions(){
+            let dataFetchQuestions = await QuizService.getQuestionByQuiz(quizId);
+            console.log(dataFetchQuestions);
+            if(dataFetchQuestions){
+                setQuestions(dataFetchQuestions.questionId);
+                setCurrenQuestion(dataFetchQuestions.questionId[activeQuestion])
+            } else {
+                setQuestions([]);
+            }
+        }
+        if(quizId !== ''){
+            fetchQuestions();
+        }
+    }, [quizId]);
 
     const handleSelectChoice = (e) => {
         const { name: newSelectedChoice, checked } = e.target;
@@ -38,9 +60,9 @@ export default function QuestionPracticeScreen () {
     };
 
     const onClickNext = (isGetChoice) => {
-        submittedQuiz.choice.push( { questionId: currentQuestion.questionId, choicePerQuestion: isGetChoice ? currentChoice : []});
+        submittedQuiz.choice.push( { questionId: currentQuestion._id, choicePerQuestion: isGetChoice ? currentChoice : []});
         
-        if (activeQuestion !== questionList.length - 1) {
+        if (activeQuestion !== questionList.length ) {
             setActiveQuestion((prev) => prev + 1)
             setCurrentChoice([]);
         } else {
@@ -51,43 +73,65 @@ export default function QuestionPracticeScreen () {
     };
 
     const handleSubmitQuiz = () => {
-        //call API to submit result quiz
+        let submitCondition = {
+            quizId: quizId,
+            choice: submittedQuiz.choice,
+            time: submittedQuiz.time
+        };
+
+        Swal.fire({
+            title: `Submit request`,
+            icon: 'success',
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            confirmButtonText: 'Ok',
+            preConfirm: async () => {
+                await SubmittedQuizService.submitQuiz(submitCondition);
+            },
+        }).then(() => {
+            navigation(`${link.trainee}${link.traineeMySubject}`)
+        })
     }
 
     return (
         <PageCenterGlobalComponent>
-            <div style = {styles.quizContainer}>
-                <HeaderQuizComponent
-                    activeQuestion = {activeQuestion}
-                    totalQuestions = {quizDetails.totalQuestions}
-                    timer = {quizDetails.timer}
-                />
-                <QuestionComponent
-                    questionContent = {currentQuestion.questionContent}
-                    code = {currentQuestion.code}
-                    image = {currentQuestion.image}
-                    type = {currentQuestion.type}
-                    answers = {currentQuestion.answer}
-                    currentChoice = {currentChoice}
-                    handleSelectChoice = {handleSelectChoice}
-                />
-                <div style = {styles.buttonWrapper}>
-                    {
-                        activeQuestion !== quizDetails.totalQuestions - 1 && 
-                            <button
-                                style = {styles.button}
-                                onClick = {() => onClickNext(false)}>
-                                {'Skip'}
-                            </button>
-                    }
-                    <button 
-                        style = {styles.button}
-                        onClick = {() => onClickNext(true)}
-                        disabled = {currentChoice.length === 0}>
-                        {activeQuestion === quizDetails.totalQuestions - 1 ? 'Finish' : 'Next'}
-                    </button>
+            {
+                currentQuestion && (
+                <div style = {styles.quizContainer}>
+                        <HeaderQuizComponent
+                            activeQuestion = {activeQuestion}
+                            totalQuestions = {questions.length}
+                            timer = {quizDetails.timer}
+                        />
+                        <QuestionComponent
+                            questionContent = {currentQuestion.questionName}
+                            code = {currentQuestion.code}
+                            image = {currentQuestion.image}
+                            type = {currentQuestion.type}
+                            answers = {currentQuestion.answer}
+                            currentChoice = {currentChoice}
+                            handleSelectChoice = {handleSelectChoice}
+                        />
+                        <div style = {styles.buttonWrapper}>
+                        {
+                            activeQuestion !== quizDetails.totalQuestions && 
+                                <button
+                                    style = {styles.button}
+                                    onClick = {() => onClickNext(false)}>
+                                    {'Skip'}
+                                </button>
+                        }
+                        <button 
+                            style = {styles.button}
+                            onClick = {() => onClickNext(true)}
+                            disabled = { currentChoice.length === 0 }>
+                            {activeQuestion === questions.length - 1 ? 'Finish' : 'Next'}
+                        </button>
+                    </div>
                 </div>
-            </div>
+                )
+            }
+            
         </PageCenterGlobalComponent>
     )
 };
