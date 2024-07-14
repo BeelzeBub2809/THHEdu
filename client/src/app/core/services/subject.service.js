@@ -33,4 +33,14 @@ export class SubjectService{
                 throw error;
             })
     }
+
+    static async getDetailSubject(subjectId){
+        return await ApiService.get(UltisService.setUrlValueParams(api.getSubject, {subjectId: subjectId}))
+            .then((response) => {
+                return response
+            })
+            .catch((error) => {
+                throw error;
+            })
+    }
 }

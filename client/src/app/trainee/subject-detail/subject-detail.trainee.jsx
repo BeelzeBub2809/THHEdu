@@ -3,14 +3,16 @@ import React, {useEffect, useState} from 'react';
 import { useParams } from 'react-router-dom';
 import { link } from '../../core/constants/link';
 import { useNavigate } from 'react-router-dom';
+import { SubjectService } from '../../core/services/subject.service';
 
 function SubjectDetailComponent(){
     const navigation = useNavigate();
 
     const { subjectId: subjectId } = useParams();
     // const [subject, setSubject] = useState(null);
-    
+    const [subjectDetail, setSubjectDetail] = useState('');
     const [isJoinedSubject, setIsJoinedSubject] = useState(true);
+
     const subject = {
         subjectId: subjectId,
         imgSrc: 'https://coreui.io/react/docs/static/react-83088efde08a5dedde9f67a954cb4b5b.jpg',
@@ -20,10 +22,13 @@ function SubjectDetailComponent(){
     };
 
     useEffect( () => {
-        //call api to get subject detail
-        // setSubject(data);
-
-        //call api to check enrolled subject? from joinedSubject table by userId
+        async function fetchSubject(){
+            if(subjectId !== ''){
+                const dataSubjectDetail = await SubjectService.getDetailSubject(subjectId);
+                setSubjectDetail(dataSubjectDetail);
+            }
+        }
+        fetchSubject();
     }, [subjectId]);
 
     const handleNavigateSubject = () => {
@@ -53,7 +58,7 @@ function SubjectDetailComponent(){
                         justifyContent: 'center',
                     }}
                 >
-                    <h1>{subject.title}
+                    <h1> {subjectDetail.subjectName}
                         <h4>{subject.institution}</h4>
                     </h1>
                 </div>
@@ -67,7 +72,7 @@ function SubjectDetailComponent(){
                     </Col>
                     <Col className={styles.center}
                         style = {{ flexDirection: 'column'}}>
-                        <h3>$24,128 USD</h3>
+                        <h3>$ {subjectDetail.price} USD</h3>
                         <h6>Competitively priced with pay-as-you-go tuition</h6>
                     </Col>
                 </Row>
