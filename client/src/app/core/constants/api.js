@@ -10,4 +10,5 @@ export const api = {
     getChapterBySubject: '/chapter/by-subject/:subjectId',
     createQuestionBySubject: '/question/by-subject/:subjectId/create',
     getQuestionBySubject: '/question/by-subject/:subjectId',
+    createQuizBySubject: '/quiz/by-subject/:subjectId'
 };
