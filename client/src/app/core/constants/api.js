@@ -1,5 +1,6 @@
 export const api = {
     login: '/auth/login',
+    register: '/auth/register',
     getUsers: '/admin/user/list',
     learningQuiz: '/trainee/info-quiz',
     getSubjects: '/subject/list',

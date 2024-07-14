@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEdit, faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import { Pagination } from '../../shared/components/pagination'
 import { UserService } from '../../core/services/user.service'
+import { useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
 
 export default function UserManagement() {
@@ -30,6 +31,7 @@ export default function UserManagement() {
   const [phone, setPhone] = useState('')
   const [avatar, setAvatar] = useState('')
   const [status, setStatus] = useState('')
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -57,7 +59,10 @@ export default function UserManagement() {
     if(selectedUserId){
       const fetchUserDetail = async () => {
         try {
-          const response = await fetch(`http://localhost:9999/admin/user/${selectedUserId}`)
+          const response = await fetch(`http://localhost:9999/admin/user/${selectedUserId}`, {
+            method: 'GET',
+            credentials: 'include'
+          })
           if (!response.ok) {
             throw new Error('Network response was not ok')
           }
@@ -197,12 +202,14 @@ export default function UserManagement() {
         console.log(status);
         response = await fetch('http://localhost:9999/admin/user/create', {
           method: 'POST',
-          body:formData
+          body:formData,
+          credentials: 'include'
         })
       } else if (currentAction === 'update') {
         response = await fetch(`http://localhost:9999/admin/user/${selectedUserId}`, {
           method: 'POST',
-          body:formData
+          body:formData,
+          credentials: 'include'
         })
       }
       if (!response.ok) {

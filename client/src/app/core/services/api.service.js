@@ -8,7 +8,8 @@ export class ApiService {
 
     static async get(path){
         return await fetch(`${environment.apiUrl}${path}`, {
-            method: "GET"
+            method: "GET",
+            credentials: 'include'
         })
         .then((response) => {
             if (!response.ok) {
@@ -27,7 +28,8 @@ export class ApiService {
             body: JSON.stringify(body),
             headers: {
                 'Content-Type': 'application/json',
-            }
+            },
+            credentials: 'include'
         })
         .then((response) => {
             return response.json();
