@@ -24,7 +24,10 @@ async function getChapterBySubject(req,res,next){
     if (!mongoose.Types.ObjectId.isValid(subjectId)) {
       return res.status(400).json({ message: 'Invalid subject' });
     }
-    const chapterList = await DbChapter.find({subjectId: subjectId});
+    const { type } = req.body;
+
+    const chapterList = await ChapterRepo.getChapterBySubject({subjectId, type})
+
     if(chapterList){
       return res.status(200).json(chapterList)
     }

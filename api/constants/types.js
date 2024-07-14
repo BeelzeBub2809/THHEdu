@@ -3,4 +3,11 @@ const chapterType = {
     VIDEO: 1,
     QUIZ: 2
 }
-module.exports = chapterType
+
+const questionType = {
+    MCQ: 'MCQ', // multiple choice question,
+    MAQ: 'MAQ', // multiple answer question,
+    BOOLEAN: 'boolean' // true/false question
+}
+
+module.exports = { chapterType, questionType }

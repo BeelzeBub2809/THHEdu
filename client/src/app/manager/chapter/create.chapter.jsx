@@ -45,7 +45,7 @@ export default function CreateChapterComponent({ showModal, handleCloseModal, su
         } else if (key === 'tab2') {
             formControl.setField('attachments', youtubeLink, Rules.youtubeLink);
         }
-        console.log(formControl);
+        
         let isSubmit = formControl.submitForm(e);
         if(isSubmit){
             let createConditions = {
