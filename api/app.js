@@ -10,6 +10,7 @@ const SubjectRouter = require('./routes/subject.router');
 const QuizRouter = require('./routes/quiz.router')
 const ChapterRouter = require('./routes/chapter.router')
 const QuestionRouter = require('./routes/question.router')
+const SubmittedQuizRouter = require('./routes/submitted-quiz.routes');
 
 const app = express();
 app.use(logger('dev'));
@@ -27,6 +28,7 @@ app.use('/subject', SubjectRouter);
 app.use('/quiz', QuizRouter);
 app.use('/chapter', ChapterRouter);
 app.use('/question', QuestionRouter);
+app.use('/submitted-quiz', SubmittedQuizRouter);
 
 app.use((req, res, next) => {
   next(httpError(404, 'Not Found'));

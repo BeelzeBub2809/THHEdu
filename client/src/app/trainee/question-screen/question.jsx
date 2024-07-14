@@ -9,7 +9,7 @@ const QuestionComponent = ({questionContent, code, image, type, answers, current
             <h2 style = {styles.questionStyle}>{questionContent}</h2>
             {image && <ImageQuiz image = {image}/>}
             <div style = {styles.answersContainer}>
-                {answers.map((answer, index) => (
+                { answers && answers.map((answer, index) => (
                     <AnswerComponent
                         index = {index}
                         answer = {answer}
