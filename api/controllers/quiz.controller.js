@@ -1,4 +1,4 @@
-const { } = require('../models/index.js')
+const { DbQuiz } = require('../models/index.js')
 const  QuizRepo = require('../repositories/quiz.repository.js')
 const mongoose = require('mongoose')
 
@@ -18,7 +18,23 @@ async function getQuizBySubject(req,res,next){
   }
 }
 
+async function createQuizBySubject(req,res,next){
+  try {
+      const subjectId = req.params.subjectId;
+      if (!mongoose.Types.ObjectId.isValid(subjectId)) {
+        return res.status(400).json({ message: 'Invalid quiz'});
+      }
+      
+      const { chapterId, quizName, duration, questionId } = req.body;
+      const newQuiz = await DbQuiz.create({subjectId, chapterId, quizName, duration, questionId})
+      
+      res.status(201).json(newQuiz);
+    } catch (error) {
+      next(error)
+    }
+}
+
 const QuizController = {
-    getQuizBySubject
+    getQuizBySubject, createQuizBySubject
 }
 module.exports = QuizController

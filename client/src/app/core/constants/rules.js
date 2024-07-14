@@ -21,4 +21,6 @@ export const Rules = {
     answerContent: [Validators.requiredString, Validators.maxLength(100)],
     explain: [Validators.requiredString, Validators.maxLength(500)],
     requiredString: [Validators.requiredString],
+    quizName: [Validators.requiredString, Validators.maxLength(50)],
+    duration: [Validators.required, Validators.number],
 };

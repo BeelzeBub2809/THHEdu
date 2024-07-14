@@ -18,4 +18,11 @@ export class QuizService{
                 return response
             });
     }
+
+    static async createQuizBySubject(createCondition){
+        return await ApiService.post(UltisService.setUrlValueParams(api.createQuizBySubject, { subjectId: createCondition.subjectId}), createCondition)
+            .then((response) => {
+                return response;
+            })
+    }
 }

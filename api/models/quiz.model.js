@@ -5,10 +5,6 @@ const quizSchema = new Schema({
     type: String,
     required: true
   },
-  totalQuestion: {
-    type: Number,
-    required: true,
-  },
   duration: {
     type: Number,
     required: true
