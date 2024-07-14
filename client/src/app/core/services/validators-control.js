@@ -39,6 +39,26 @@ export class ValidatorsControl{
         return msg;
     }
 
+    addValidators(fieldName, validators) {
+        if (this.form[fieldName]) {
+            this.form[fieldName].validators = [...this.form[fieldName].validators, ...validators];
+        } else {
+            this.form[fieldName] = { value: '', validators: validators };
+        }
+    }
+
+    setFieldValue(fieldName, value) {
+        if (this.form[fieldName]) {
+            this.form[fieldName].value = value;
+        } else {
+            this.form[fieldName] = { value: value, validators: [] };
+        }
+    }
+
+    setField(fieldName, value, validators) {
+        this.form[fieldName] = { value: value, validators: validators };
+    }
+
     submitForm(event){
         event.preventDefault();
         const errors = this.validateForm(this.form);

@@ -9,3 +9,9 @@ export const chapterType = {
     VIDEO: 1,
     QUIZ: 2
 }
+
+export const chapterTypeIcon = {
+    lecture: '/assets/icons/lecture.svg',
+    quiz: '/assets/icons/quiz.svg',
+    video: '/assets/icons/video.svg'
+}

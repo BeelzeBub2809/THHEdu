@@ -6,6 +6,9 @@ const chapterSchema = new Schema({
     type: String,
     required: true
   },
+  content: {
+    type: String,
+  },
   attachments: {
     type: String
   },
@@ -22,6 +25,10 @@ const chapterSchema = new Schema({
     ref: 'Subject',
     required: true
   },
+  quizzes: [{
+    type: Schema.ObjectId,
+    ref: 'Quiz',
+  }],
   createBy: {
     type: Schema.ObjectId,
     ref: 'User'

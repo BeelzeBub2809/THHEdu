@@ -7,6 +7,8 @@ require('dotenv').config()
 const db = require('./repositories/connectDB');
 const { UserRouter } = require('./routes/admin/admin.routes');
 const SubjectRouter = require('./routes/subject.router');
+const QuizRouter = require('./routes/quiz.router')
+const ChapterRouter = require('./routes/chapter.router')
 
 const app = express();
 app.use(logger('dev'));
@@ -21,7 +23,8 @@ app.use(cors({
 }));
 app.use('/admin/user', UserRouter);
 app.use('/subject', SubjectRouter);
-
+app.use('/quiz', QuizRouter);
+app.use('/chapter', ChapterRouter);
 app.use((req, res, next) => {
   next(httpError(404, 'Not Found'));
 });

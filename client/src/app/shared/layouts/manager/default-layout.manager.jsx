@@ -6,6 +6,8 @@ import PageNotFound from '../../../error/page-not-found';
 import DashboardManagerPage from '../../../manager/dashboard/dashboard.manager';
 import QuizRoutes from '../../../manager/quiz/quiz.routes';
 import QuestionRoutes from '../../../manager/question/question.routes';
+import ChapterRoutes from '../../../manager/chapter/chapter.routes'
+import { link } from '../../../core/constants/link';
 
 function DefaultLayoutManager(){
     return(
@@ -20,6 +22,7 @@ function DefaultLayoutManager(){
                             <Route path="/subject/*" element={<SubjectRoutes/>} />
                             <Route path="/quiz/*" element={<QuizRoutes/>} />
                             <Route path="/question/*" element={<QuestionRoutes/>} />
+                            <Route path={`${link.managerChapterList}/*`} element={<ChapterRoutes/>} />
                             <Route path="/*" element={<PageNotFound/>} />
                         </Routes>
                     </div>
