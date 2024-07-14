@@ -14,4 +14,7 @@ export const Rules = {
     password: [Validators.required, Validators.minLength(8), Validators.maxLength(20), Validators.password],
     code: [Validators.required, Validators.minLength(3), Validators.maxLength(6)],
     price: [Validators.required, Validators.number],
+    title: [Validators.required, Validators.maxLength(40)],
+    content: [Validators.required],
+    youtubeLink: [Validators.required, Validators.youtubeLink]
 };

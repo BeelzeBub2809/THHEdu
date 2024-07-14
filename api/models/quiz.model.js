@@ -25,12 +25,10 @@ const quizSchema = new Schema({
   chapterId: {
     type: Schema.ObjectId,
     ref: 'Chapter',
-    required: true
   },
   questionId: [{
     type: Schema.ObjectId,
     ref: 'Question',
-    required: true
   }],
   createBy: {
     type: Schema.ObjectId,

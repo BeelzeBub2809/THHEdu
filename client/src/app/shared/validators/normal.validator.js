@@ -7,6 +7,7 @@ const Validators = {
     phoneNumber: value => value && value.trim().length === 10  && /^0\d{9}$/.test(value) ? null : { phoneNumber: true},
     password: value => value && value.trim().length > 0 && /^(?=.*\d)(?=.*[a-zA-Z])(?=.*[\W_])\S{8,}$/.test(value) ? null : { password: true },
     number: value => value && /^\d+(\.\d{1,2})?$/.test(value) ? null : { price: true },
+    youtubeLink: value => value && /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(?:-nocookie)?\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|live\/|v\/)?)([\w\-]+)(\S+)?$/.test(value) ? null : { youtubeLink: true},
 };
 
 export default Validators;

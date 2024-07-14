@@ -4,5 +4,8 @@ export const api = {
     learningQuiz: '/trainee/info-quiz',
     getSubjects: '/subject/list',
     createSubject: '/subject/create',
-    updateSubject: '/subject/update/:_id'
+    updateSubject: '/subject/update/:_id',
+    getQuizBySubject: '/quiz/by-subject/:subjectId',
+    createChapterBySubject: '/chapter/by-subject/:subjectId/create',
+    getChapterBySubject: '/chapter/by-subject/:subjectId',
 };

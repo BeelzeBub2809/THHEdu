@@ -6,4 +6,5 @@ export const Errors = {
     phoneNumber: ':field must be 10 digits and start with 0',
     pattern: ':field is not correct format',
     password: ':field must contain at least one number, one letter and one special character',
+    youtubeLink: ':field is not correct',
 }

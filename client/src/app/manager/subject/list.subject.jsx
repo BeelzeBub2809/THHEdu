@@ -8,9 +8,13 @@ import EditSubjectComponent from './edit.subject'
 import { SubjectService } from '../../core/services/subject.service'
 import { Pagination } from '../../shared/components/pagination'
 import ViewSubjectComponent from './view.subject'
+import { useNavigate } from 'react-router-dom';
+import { link } from '../../core/constants/link'
 
-  export default function ListSubjectComponent(){
+export default function ListSubjectComponent(){
     
+    const navigation = useNavigate();
+
     const [data, setData] = useState([]);
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
@@ -63,6 +67,10 @@ import ViewSubjectComponent from './view.subject'
         fetchData();
     }, [page, size, filterConditions]); 
 
+    const handleViewChapters = (item) => {
+        navigation(`${link.manager}${link.managerChapterList.replace(':subjectId',item._id)}`);
+    }
+
     return (
         <div className="container-fluid">
             <div className='content'>
@@ -96,6 +104,7 @@ import ViewSubjectComponent from './view.subject'
                             <th>Manager</th>
                             <th>Action</th>
                             <th>Status</th>
+                            <th>View Chapters</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -127,6 +136,11 @@ import ViewSubjectComponent from './view.subject'
                                         </span>
                                     )
                                 }
+                            </td>
+                            <td>
+                                <span type="button" className = "badge bg-info" onClick={() => handleViewChapters(item)}>
+                                    View
+                                </span>
                             </td>
                         </tr>
                         ))}
