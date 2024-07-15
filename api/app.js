@@ -10,6 +10,8 @@ const SubjectRouter = require('./routes/subject.router');
 const QuizRouter = require('./routes/quiz.router')
 const ChapterRouter = require('./routes/chapter.router')
 const QuestionRouter = require('./routes/question.router')
+const AuthRouter = require('./routes/auth/auth.route');
+const joinedSubjectRouter = require('./routes/trainee/joinedSubject.route');
 const SubmittedQuizRouter = require('./routes/submitted-quiz.routes');
 
 const app = express();
@@ -17,8 +19,9 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+const PORT_CLIENT = process.env.PORT_CLIENT || 3000;
 app.use(cors({
-  origin: 'http://localhost:'+process.env.PORT_CLIENT,
+  origin: `http://localhost:${PORT_CLIENT}`,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
@@ -30,6 +33,8 @@ app.use('/chapter', ChapterRouter);
 app.use('/question', QuestionRouter);
 app.use('/submitted-quiz', SubmittedQuizRouter);
 
+app.use('/auth', AuthRouter);
+app.use('/trainee', joinedSubjectRouter)
 app.use((req, res, next) => {
   next(httpError(404, 'Not Found'));
 });

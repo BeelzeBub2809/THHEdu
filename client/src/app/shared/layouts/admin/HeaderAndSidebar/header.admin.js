@@ -3,8 +3,10 @@ import { useState } from 'react'
 import UserProfileModal from '../../common/userProfileModal'
 import ChangePassModal from '../../common/changePassModal';
 import LogoComponent from '../../../icons/logo/logo.icons';
+import { useNavigate } from 'react-router-dom';
 
 function HeaderAdmin() {
+    const navigation = useNavigate()
     const [showProfileModal, setShowProfileModal] = useState(false);
     const [showChangePassModal, setShowChangePassModal] = useState(false);
 
@@ -22,8 +24,12 @@ function HeaderAdmin() {
     const handleCloseChangePassModal = () => {
         setShowChangePassModal(false)
     };
-    const handleLogout = () => {
-        // Add your logout handling logic here
+    const handleLogout = async() => {
+        await fetch('http://localhost:9999/auth/logout', {
+            method: 'POST',
+            credentials: 'include'
+        })
+        navigation('/login')
     }
     return (
         <header className="top-bar">
