@@ -48,7 +48,7 @@ async function login(req, res, next) {
           maxAge: 60*60*1000,
           httpOnly: true
         })
-        return res.status(200).json({message: 'Login success', roles: roles})
+        return res.status(200).json({message: 'Login success', roles: roles, id: user._id})
       }
     }
   } catch (error) {

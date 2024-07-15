@@ -65,6 +65,8 @@ export default function LoginPage() {
                 }
                 const data = await response.json()
                 const roles = data.roles
+                localStorage.setItem('userRoles', JSON.stringify(roles));
+                localStorage.setItem('userId', JSON.stringify(data.id));
                 handleRedirect(roles)
             } catch (error) {
                 Swal.fire({
