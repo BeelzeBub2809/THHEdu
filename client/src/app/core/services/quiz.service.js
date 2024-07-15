@@ -25,4 +25,11 @@ export class QuizService{
                 return response;
             })
     }
+
+    static async getQuestionByQuiz(quizId){
+        return await ApiService.get(UltisService.setUrlValueParams(api.getQuestionByQuiz, { quizId: quizId}))
+            .then((response) => {
+                return response
+            });
+    }
 }

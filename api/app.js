@@ -12,6 +12,7 @@ const ChapterRouter = require('./routes/chapter.router')
 const QuestionRouter = require('./routes/question.router')
 const AuthRouter = require('./routes/auth/auth.route');
 const joinedSubjectRouter = require('./routes/trainee/joinedSubject.route');
+const SubmittedQuizRouter = require('./routes/submitted-quiz.routes');
 
 const app = express();
 app.use(logger('dev'));
@@ -30,6 +31,7 @@ app.use('/subject', SubjectRouter);
 app.use('/quiz', QuizRouter);
 app.use('/chapter', ChapterRouter);
 app.use('/question', QuestionRouter);
+app.use('/submitted-quiz', SubmittedQuizRouter);
 
 app.use('/auth', AuthRouter);
 app.use('/trainee', joinedSubjectRouter)
