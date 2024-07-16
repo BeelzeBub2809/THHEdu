@@ -38,14 +38,14 @@ async function login(req, res, next) {
       if(!bcrypt.compareSync(password, user.password)){
         return res.status(400).json({message: 'Password is not correct'})
       }else{
-        const accessToken = jwt.sign({id: user._id, roles: roles}, process.env.ACCESS_TOKEN_JWT_SECRET_KEY, {expiresIn: '10m'})
-        const refreshToken = jwt.sign({id: user._id, roles: roles}, process.env.REFRESH_TOKEN_JWT_SECRET_KEY, {expiresIn: '60m'})
+        const accessToken = jwt.sign({id: user._id, roles: roles}, process.env.ACCESS_TOKEN_JWT_SECRET_KEY, {expiresIn: '60m'})
+        const refreshToken = jwt.sign({id: user._id, roles: roles}, process.env.REFRESH_TOKEN_JWT_SECRET_KEY, {expiresIn: '30d'})
         res.cookie('accessToken', accessToken, {
-          maxAge: 10*60*1000,// 10 min
+          maxAge: 60*60*1000,// 10 min
           httpOnly: true 
         })
         res.cookie('refreshToken', refreshToken, {
-          maxAge: 60*60*1000,
+          maxAge: 30*24*60*60*1000,
           httpOnly: true
         })
         return res.status(200).json({message: 'Login success', roles: roles, id: user._id})

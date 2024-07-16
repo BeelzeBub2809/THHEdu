@@ -69,11 +69,11 @@ function renewToken(req, res) {
         const accessToken = jwt.sign(
           { id: decoded.id, roles: decoded.roles },
           process.env.ACCESS_TOKEN_JWT_SECRET_KEY,
-          { expiresIn: '10m' }
+          { expiresIn: '60m' }
         );
 
         res.cookie('accessToken', accessToken, {
-          maxAge: 10 * 60 * 1000 // 1 minute
+          maxAge: 60 * 60 * 1000 // 1 minute
         });
 
         req.user = { _id: decoded.id, roles: decoded.roles };
