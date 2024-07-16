@@ -31,7 +31,6 @@ function DashboardTraineePage(){
                     </Col>
                 ))}
             </Row>
-            <Button variant="primary">Show 8 more</Button>
         </Container>
     )
 }

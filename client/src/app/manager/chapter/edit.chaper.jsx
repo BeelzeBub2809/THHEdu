@@ -54,6 +54,10 @@ function EditChapterComponent({ showModal, handleCloseModal, item, subjectId }) 
         );
     };
 
+    async function editChapter(updateCondition){
+        await ChapterService.editChapter(item._id, updateCondition)
+    }
+
     const handleEditChapter = async (e) => {
         let formControl = new ValidatorsControl({
             title: { value: title, validators: Rules.title},
@@ -77,25 +81,25 @@ function EditChapterComponent({ showModal, handleCloseModal, item, subjectId }) 
             } else if ( key === chapterType.QUIZ){
                 updateCondition = { ...updateCondition, quizzes: selectedQuizzes, type: chapterType.QUIZ};
             }
-            console.log(updateCondition);
-            Swal.fire({
-                title: `Success request`,
-                icon: 'success',
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-                confirmButtonText: 'Ok',
-                preConfirm: async () => {
-                    await ChapterService.editChapter(item._id, updateCondition)
-                    .catch((error) => {
-                        Swal.showValidationMessage(`Request failed: ${error}`);
-                    });
-                },
-            }).then(() => {
+            try{
+                editChapter(updateCondition)
                 handleCloseModal();
                 window.location.reload();
-            })
+
+            } catch (error) {
+                Swal.fire({
+                    title: 'Error',
+                    text: error.message,
+                    icon: 'error',
+                    confirmButtonText: 'Ok'
+                  }).then(()=>{
+                    handleCloseModal();
+                    window.location.reload();
+                  })
+            }
         }
     }
+
 
 
     const handleQuizSearch = (e) => {

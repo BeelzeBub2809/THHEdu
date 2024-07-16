@@ -5,11 +5,10 @@ async function getAllJoinedSubjectById(traineeId) {
   return listJoinedSubjects
 } 
 
-async function addJoinedSubject({traineeId, subjectId, learnedChapter}) {
+async function addJoinedSubject({traineeId, subjectId}) {
   const joinedSubject = {
     traineeId: traineeId,
-    subjectId: subjectId,
-    learnedChapter: learnedChapter
+    subject: subjectId
   }
   const newJoinedSubject = await DbJoinedSubject.create(joinedSubject)
   return newJoinedSubject

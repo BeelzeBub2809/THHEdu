@@ -23,10 +23,12 @@ async function updateChapter({chapterId, ...updateCondition}){
                 content: updateCondition.content,
                 attachments: updateCondition.attachments,
                 quizzes: updateCondition.quizzes,
+            },
+            $addToSet: {
                 createBy: updateCondition.createBy
             }
         },
-        {new: true}
+        {new: true, runValidators: true}
     )
     return updateChapter
 }

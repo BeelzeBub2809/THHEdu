@@ -6,11 +6,11 @@ const joinedSubjectSchema = new Schema({
     ref: 'User',
     required: true
   },
-  subjectId: [{
+  subject: {
     type: Schema.ObjectId,
     ref: 'Subject',
     required: true
-  }],
+  },
   learnedChapter: [
     {
       type: Schema.ObjectId,

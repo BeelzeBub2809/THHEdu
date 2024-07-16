@@ -11,24 +11,17 @@ import VideoPlaying from '../../shared/components/video.playing'
 import { MIN_TIME_LEARN_VIDEO } from '../../core/constants/config';
 import { theme } from '../../shared/styles/theme.style';
 import { ChapterService } from '../../core/services/chapter.service';
-
-const joinedSubjectDataTest = {
-    subjectId: 1,
-    traineeId: 1,
-    learnedChapter:[
-    ]
-}
+import { JoinedSubjectService } from '../../core/services/joined-subject.service';
 
 function LearnSubjectComponent(){
     const navigation = useNavigate();
 
     const { subjectId: subjectId } = useParams();
     const [isShowMenuChapter, setIsShowChaterList] = useState(true);
-    const [listChapters, setListChapters] = useState(); 
+    const [listChapters, setListChapters] = useState([]); 
     const [currentChapter, setCurrentChapter] = useState();
-
-    //WARNING: Delete after done backend: Call API to get data from with par: traineeId(userId), sujectId
-    const [learnedChapters, setLeanredChapters] = useState(joinedSubjectDataTest.learnedChapter);
+    const [learnedChapters, setLeanredChapters] = useState([]);
+    const [reFetchLearnedChapter, setReFetchLearnedChapter] = useState(true);
 
     useEffect( () => {
         async function fetchChapter(){
@@ -39,18 +32,31 @@ function LearnSubjectComponent(){
         fetchChapter();
     }, [subjectId]);
 
+
+    useEffect( () => {
+        async function fetchLearnedChapter(){
+            if(subjectId){
+                let learnedChapterData = await JoinedSubjectService.getLearnedChapterBySubject(AuthService.getUserId(), subjectId);
+                if( learnedChapterData){
+                    setLeanredChapters(learnedChapterData);
+                } else {
+                    setLeanredChapters([]);
+                }
+            }
+        }
+        fetchLearnedChapter();
+    }, [reFetchLearnedChapter]);
+
     const handleSelectChapter = (_id) => {
         setCurrentChapter(listChapters.find(c => c._id === _id));
     }
 
     const handleStartQuiz = (_id) => {
-        navigation(`${link.trainee}${link.traineePracticeQuiz}/${_id}`)
+        navigation(`${link.trainee}${link.traineePracticeQuiz}/${subjectId}/${_id}`)
     }
 
     const handleVideoProgress = (progress) => {
-        if(progress.played*100 > MIN_TIME_LEARN_VIDEO && !learnedChapters.includes(currentChapter._id)){
-            //TODO: Call api to save this chapter is learned to DbJoinedSubject
-
+        if(progress.played*100 > MIN_TIME_LEARN_VIDEO){
             submitLearnedChapter();
         }
     };
@@ -59,15 +65,18 @@ function LearnSubjectComponent(){
         submitLearnedChapter();
     }
 
-    const submitLearnedChapter = () => {
-        setLeanredChapters(prev => [...prev, currentChapter._id]);
+    const submitLearnedChapter = async () => {
+        if( !learnedChapters.includes(currentChapter._id)){
+            await JoinedSubjectService.markLearnedChapter(AuthService.getUserId(), subjectId, currentChapter._id);
+            setReFetchLearnedChapter(prev => !prev);
+        }
     }
 
     const menuComponent = () => {
         return(
             <Col className='col-3'>
                 {
-                    listChapters && listChapters.map( (chapter, index ) => {
+                    listChapters.length > 0 && listChapters.map( (chapter, index ) => {
                         return (
                             <div key={index} >
                                 <div className="btn btn-light w-100 text-start rounded-0 p-3 border-bottom d-flex"

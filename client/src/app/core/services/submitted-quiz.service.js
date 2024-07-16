@@ -4,14 +4,10 @@ import { UltisService } from "./utils.service";
 
 export class SubmittedQuizService{
 
-    static async submitQuiz(createConditions){
-        return await ApiService.post(api.submitQuiz, createConditions)
+    static async submitQuiz(submitCondition){
+        return await ApiService.post(api.submitQuiz, submitCondition)
             .then((response) => {
                 return response
             })
-            .catch((error) => {
-                throw error;
-            })
     }
-
 }

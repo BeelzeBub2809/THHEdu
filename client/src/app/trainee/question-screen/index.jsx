@@ -11,11 +11,12 @@ import { SubmittedQuizService } from '../../core/services/submitted-quiz.service
 import Swal from 'sweetalert2'
 import { useNavigate } from 'react-router-dom';
 import { link } from '../../core/constants/link';
+import { AuthService } from '../../core/services/auth.service';
 
 export default function QuestionPracticeScreen () {
     const navigation = useNavigate();
 
-    const { quizId } = useParams();
+    const { subjectId, quizId } = useParams();
     const [ questions, setQuestions ] = useState([]);
     const [activeQuestion, setActiveQuestion] = useState(0);
     const [currentQuestion, setCurrenQuestion] = useState();
@@ -26,9 +27,9 @@ export default function QuestionPracticeScreen () {
     useEffect ( () => {
         async function fetchQuestions(){
             let dataFetchQuestions = await QuizService.getQuestionByQuiz(quizId);
-            console.log(dataFetchQuestions);
             if(dataFetchQuestions){
                 setQuestions(dataFetchQuestions.questionId);
+                console.log(dataFetchQuestions.questionId);
                 setCurrenQuestion(dataFetchQuestions.questionId[activeQuestion])
             } else {
                 setQuestions([]);
@@ -62,8 +63,9 @@ export default function QuestionPracticeScreen () {
     const onClickNext = (isGetChoice) => {
         submittedQuiz.choice.push( { questionId: currentQuestion._id, choicePerQuestion: isGetChoice ? currentChoice : []});
         
-        if (activeQuestion !== questionList.length ) {
+        if (activeQuestion !== questions.length - 1) {
             setActiveQuestion((prev) => prev + 1)
+            setCurrenQuestion(questions[activeQuestion+1]);
             setCurrentChoice([]);
         } else {
             const timeTaken = 10; // total time - remain time 
@@ -72,26 +74,32 @@ export default function QuestionPracticeScreen () {
         }
     };
 
+    async function submitQuizAsync(submitCondition){
+        await SubmittedQuizService.submitQuiz(submitCondition);
+    }
+
     const handleSubmitQuiz = () => {
         let submitCondition = {
             quizId: quizId,
             choice: submittedQuiz.choice,
-            time: submittedQuiz.time
+            traineeId: AuthService.getUserId(),         
         };
 
-        Swal.fire({
-            title: `Submit request`,
-            icon: 'success',
-            allowOutsideClick: false,
-            allowEscapeKey: false,
-            confirmButtonText: 'Ok',
-            preConfirm: async () => {
-                await SubmittedQuizService.submitQuiz(submitCondition);
-            },
-        }).then(() => {
-            navigation(`${link.trainee}${link.traineeMySubject}`)
-        })
+        try{
+            submitQuizAsync(submitCondition);
+        } catch (error) {
+            Swal.fire({
+                title: 'Error',
+                text: error.message,
+                icon: 'error',
+                confirmButtonText: 'Ok'
+            }).then(()=>
+                navigation(`${link.trainee}${link.traineeLearnSubject}/${subjectId}`)
+            )
+        }
+        navigation(`${link.trainee}${link.traineeLearnSubject}/${subjectId}`)
     }
+    
 
     return (
         <PageCenterGlobalComponent>
@@ -101,7 +109,7 @@ export default function QuestionPracticeScreen () {
                         <HeaderQuizComponent
                             activeQuestion = {activeQuestion}
                             totalQuestions = {questions.length}
-                            timer = {quizDetails.timer}
+                            timer = {10}
                         />
                         <QuestionComponent
                             questionContent = {currentQuestion.questionName}
@@ -114,7 +122,7 @@ export default function QuestionPracticeScreen () {
                         />
                         <div style = {styles.buttonWrapper}>
                         {
-                            activeQuestion !== quizDetails.totalQuestions && 
+                            activeQuestion !== questions.totalQuestions - 1 && 
                                 <button
                                     style = {styles.button}
                                     onClick = {() => onClickNext(false)}>
@@ -193,74 +201,6 @@ const styles = {
     buttonIcon: (selectedAnswer) => ({
       fill: selectedAnswer ? theme.colors.buttonText : theme.colors.darkGray
     })
-};
-
-const questionList = [
-    {
-        questionId: 1,
-        questionContent: 'What is software modeling?',
-        code: '',
-        image: '',
-        answer: [
-                {
-                    answerContent: 'Developing models of software.',
-                    isCorrected: true
-                },
-                {
-                    answerContent: 'Designing software applications before coding.',
-                    isCorrected: false
-                },
-                {
-                    answerContent: 'Developing software diagrams.',
-                    isCorrected: false
-                }
-            ],
-        type: 'MAQ',
-    },
-    {
-        questionId: 2,
-        questionContent: 'React components must always return a single JSX element.',
-        answer: [
-            {
-                answerContent: 'True',
-                isCorrected: true
-            },
-            {
-                answerContent: 'False',
-                isCorrected: false
-            }           
-        ],
-        type: 'boolean',
-    },
-    {
-        questionId: 3,
-        questionContent: 'Which of the following are valid React lifecycle methods? (Select all that apply)',
-        answer: [
-            {
-                answerContent: 'componentWillMount',
-                isCorrected: false
-            },
-            {
-                answerContent: 'componentDidMount', 
-                isCorrected: true
-            },
-            {
-                answerContent: 'componentWillUpdate',
-                isCorrected: false
-            },
-            {
-                answerContent: 'componentDidUpdate',
-                isCorrected: true
-            },
-        ],
-        type: 'MAQ',
-    }
-];
-
-const quizDetails = {
-    quizId: 1,
-    totalQuestions: questionList.length,
-    timer: 10,
 };
 
 //data sau khi da hoan thanh quiz

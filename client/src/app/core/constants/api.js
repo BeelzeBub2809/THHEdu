@@ -23,5 +23,8 @@ export const api = {
     createQuestionBySubject: '/question/by-subject/:subjectId/create',
     getQuestionBySubject: '/question/by-subject/:subjectId',
 
-    submitQuiz: '/submitted-quiz/submit'
+    submitQuiz: '/submitted-quiz/submit',
+
+    markLearnedChapter: '/trainee/joined-subject/mark-learned-chapter',
+    getLearnedChapterBySubject: '/trainee/joined-subject/learned-subject/:traineeId/:subjectId'
 };
