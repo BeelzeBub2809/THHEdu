@@ -42,13 +42,11 @@ async function createSubject(req, res, next){
       subjectName,
       description,
       isActive,
-      manager,
       price,
       createBy
     } = req.body;
 
-    const dataTest = await DbUser.findOne();
-    const newSubject = await DbSubject.create({subjectCode, subjectName, description,isActive,manager: dataTest._id,price,createBy: dataTest._id })
+    const newSubject = await DbSubject.create({ subjectCode, subjectName, description,isActive, manager: createBy, price, createBy: createBy })
     res.status(201).json(newSubject)
   } catch (error) {
     next(error)

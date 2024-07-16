@@ -12,7 +12,7 @@ function CreateSubjectComponent({ showModal, handleCloseModal }) {
     const [subjectName, setSubjectName] = useState('');
     const [isActive, setIsActive] = useState(status.ACTIVE);
     const [description, setDiscription] = useState('');
-    const user_detail = AuthService.getUserDetail() || { user_id: '1'};
+    const userId = AuthService.getUserId();
 
     let formControl = new ValidatorsControl({
         subjectCode: { value: subjectCode, validators: Rules.code},
@@ -29,9 +29,9 @@ function CreateSubjectComponent({ showModal, handleCloseModal }) {
                 subjectName: subjectName,
                 description: description,
                 isActive: isActive,
-                manager: user_detail.user_id,
+                manager: userId,
                 price: 0,
-                createBy: user_detail.user_id
+                createBy: userId
             }
             Swal.fire({
                 title: `Success request`,

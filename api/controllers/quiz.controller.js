@@ -1,4 +1,4 @@
-const { DbQuiz } = require('../models/index.js')
+const { DbQuiz, DbChapter } = require('../models/index.js')
 const  QuizRepo = require('../repositories/quiz.repository.js')
 const mongoose = require('mongoose')
 
@@ -48,7 +48,21 @@ async function getQuestionsByQuiz(req,res,next){
     }
 }
 
+async function getQuizByChapter(req,res,next){
+  try {
+      const chapterId = req.params.chapterId;
+      if (!mongoose.Types.ObjectId.isValid(chapterId)) {
+        return res.status(400).json({ message: 'Invalid chapter'});
+      }
+      const chapter = await DbChapter.findOne({_id: chapterId}).populate('quizzes');
+      
+      res.status(201).json(chapter.quizzes);
+    } catch (error) {
+      next(error)
+    }
+}
+
 const QuizController = {
-    getQuizBySubject, createQuizBySubject, getQuestionsByQuiz
+    getQuizBySubject, createQuizBySubject, getQuestionsByQuiz, getQuizByChapter
 }
 module.exports = QuizController

@@ -30,4 +30,8 @@ export class AuthService{
     static getUserDetail() {
         return this.userDetail;
     }
+
+    static getUserRoles = () => JSON.parse(localStorage.getItem('userRoles')) || []
+
+    static getUserId = () => JSON.parse(localStorage.getItem('userId')) || null
 }

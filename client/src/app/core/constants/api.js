@@ -3,17 +3,25 @@ export const api = {
     register: '/auth/register',
     getUsers: '/admin/user/list',
     learningQuiz: '/trainee/info-quiz',
-    getSubjects: '/subject/list',
+    
     getJoinedSubject: '/trainee/joinedSubject/get-by-id/:traineeId',
+
+    getSubjects: '/subject/list',
     getSubject: '/subject/:subjectId',
     createSubject: '/subject/create',
     updateSubject: '/subject/update/:_id',
+
     getQuizBySubject: '/quiz/by-subject/:subjectId',
+    getQuizByChapter: '/quiz/by-chapter/:chapterId',
+    createQuizBySubject: '/quiz/by-subject/:subjectId',
     getQuestionByQuiz: '/quiz/:quizId/get-questions',
+    
     createChapterBySubject: '/chapter/by-subject/:subjectId/create',
     getChapterBySubject: '/chapter/by-subject/:subjectId',
+    updateChapter: '/chapter/:chapterId/update',
+
     createQuestionBySubject: '/question/by-subject/:subjectId/create',
     getQuestionBySubject: '/question/by-subject/:subjectId',
-    createQuizBySubject: '/quiz/by-subject/:subjectId',
+
     submitQuiz: '/submitted-quiz/submit'
 };

@@ -1,10 +1,9 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-
-const getUserRoles = () => JSON.parse(localStorage.getItem('userRoles')) || []
+import { AuthService } from '../../../core/services/auth.service';
 
 const PrivateRoute = ({ element: Component, allowedRoles, ...rest }) => {
-  const userRoles = getUserRoles() // Retrieve user roles from local storage
+  const userRoles = AuthService.getUserRoles() // Retrieve user roles from local storage
 
   const hasAccess = allowedRoles.some(role => userRoles.includes(role));
 

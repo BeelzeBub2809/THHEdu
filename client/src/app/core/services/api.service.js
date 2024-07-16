@@ -45,7 +45,8 @@ export class ApiService {
             body: JSON.stringify(body),
             headers: {
                 'Content-Type': 'application/json',
-            }
+            },
+            credentials: 'include'
         })
         .then((response) => {
             return response.json();
@@ -61,7 +62,8 @@ export class ApiService {
             body: JSON.stringify(body),
             headers: {
                 'Content-Type': 'application/json',
-            }
+            },
+            credentials: 'include'
         })
         .then((response) => {
             return response.json();
