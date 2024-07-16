@@ -9,8 +9,8 @@ async function createChapterBySubject(req,res,next){
           return res.status(400).json({ message: 'Invalid subject' });
         }
         
-        const { title, type, content, attachments, quizzes } = req.body;
-        const newChapter = await DbChapter.create({title, content, attachments, type, subjectId, quizzes})
+        const { title, type, content, attachments, quizzes, createBy } = req.body;
+        const newChapter = await DbChapter.create({title, content, attachments, type, subjectId, quizzes, createBy})
         
         res.status(201).json(newChapter)
       } catch (error) {
@@ -37,7 +37,23 @@ async function getChapterBySubject(req,res,next){
   }
 }
 
+async function updateChapter(req,res,next){
+  try {
+    const chapterId = req.params.chapterId;
+    const { title, type, content, attachments, quizzes, createBy } = req.body;
+
+    if (!mongoose.Types.ObjectId.isValid(createBy)) {
+      return res.status(400).json({ message: 'Invalid user' });
+    }
+    console.log(createBy);
+    const updateSubject = await ChapterRepo.updateChapter({ chapterId, title, type, content, attachments, quizzes, createBy: createBy });
+    res.status(201).json(updateSubject);
+  } catch (error) {
+    next(error)
+  }
+}
+
 const ChapterController = {
-    createChapterBySubject, getChapterBySubject
+    createChapterBySubject, getChapterBySubject, updateChapter
 }
 module.exports = ChapterController

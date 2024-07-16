@@ -8,18 +8,31 @@ import { chapterType } from '../../core/constants/type';
 import { Pagination } from '../../shared/components/pagination';
 import { ChapterService } from '../../core/services/chapter.service';
 import { chapterTypeIcon } from '../../core/constants/type';
+import EditChapterComponent from './edit.chaper';
+import ViewChapterComponent from './view.chapter'
 
 export default function ListChapterComponent(){
     const { subjectId } = useParams();
     const [showCreateModal, setShowCreateModal] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [showViewModal, setShowViewModal] = useState(false);
     const [ chapterData, setChapterData ] = useState([]);
     const [page, setPage] = useState(1);
     const [maxPage, setMaxPage] = useState(0);
     const [size, setSize] = useState(15);
     const [filterConditions, setFiterConditions] = useState({ searchString: ''});
+    const [selectedItem, setSelectedItem] = useState(null);
 
     const handleCloseCreateModal = () => {
         setShowCreateModal(false);
+    }
+
+    const handleCloseViewModal = () => {
+        setShowViewModal(false);
+    }
+
+    const handleCloseEditModal = () => {
+        setShowEditModal(false);
     }
 
     const handleSearch = (event) => {
@@ -30,7 +43,11 @@ export default function ListChapterComponent(){
         const fetchChapterData = async () => {
             if (subjectId) {
                 let chapters = await ChapterService.getChaptersBySubject(subjectId, filterConditions);
-                setChapterData(chapters);
+                if(chapters){
+                    setChapterData(chapters);
+                } else {
+                    setChapterData([])
+                }
             }
         }
         fetchChapterData();
@@ -71,7 +88,7 @@ export default function ListChapterComponent(){
                         </tr>
                     </thead>
                         <tbody>
-                            {chapterData.map((item) => (
+                            {chapterData.length > 0 && chapterData.map((item) => (
                                 <tr key={item._id}>
                                     <td>{item.title}</td>
                                     <td>
@@ -83,10 +100,10 @@ export default function ListChapterComponent(){
                                     </td>
                                     <td>
                                         <button className="btn btn-link p-0 me-2">
-                                            <FontAwesomeIcon icon={faEye}/>
+                                            <FontAwesomeIcon icon={faEye}  onClick={()=>{ setSelectedItem(item); setShowViewModal(true)}}/>
                                         </button>
                                         <button className="btn btn-link p-0 me-2">
-                                            <FontAwesomeIcon icon={faEdit}/>
+                                            <FontAwesomeIcon icon={faEdit}  onClick={()=>{ setSelectedItem(item); setShowEditModal(true)}}/>
                                         </button>
                                         <button className="btn btn-link p-0">
                                             <FontAwesomeIcon icon={faTrash}/>
@@ -119,6 +136,16 @@ export default function ListChapterComponent(){
                 />
             </div>
             <CreateChapterComponent showModal={showCreateModal} handleCloseModal={handleCloseCreateModal} subjectId={subjectId}/>
+            {
+                showViewModal 
+                    && 
+                <ViewChapterComponent showModal={showViewModal} handleCloseModal={handleCloseViewModal} item = {selectedItem}/>
+            }
+            {
+                showEditModal
+                    &&
+                <EditChapterComponent showModal={showEditModal} handleCloseModal={handleCloseEditModal} item = {selectedItem} subjectId = {subjectId}/>
+            }
         </div>
     )
 }

@@ -7,6 +7,7 @@ import { Rules } from '../../core/constants/rules';
 import { chapterType } from '../../core/constants/type'
 import Swal from 'sweetalert2'
 import { ChapterService } from '../../core/services/chapter.service';
+import { AuthService } from '../../core/services/auth.service';
 
 export default function CreateChapterComponent({ showModal, handleCloseModal, subjectId }) {
 
@@ -18,15 +19,16 @@ export default function CreateChapterComponent({ showModal, handleCloseModal, su
     const [quizData, setQuizData] = useState([])
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
-    
+    const userId = AuthService.getUserId();
+
     useEffect( () => {
-        const fetchQuizData = async () => {
+        const fetchQuizInSubject = async () => {
             if (subjectId) {
-                let quizDataFetch = await QuizService.getQuizBySubject(subjectId);
-                setQuizData(quizDataFetch);
+                let quizInSubject = await QuizService.getQuizBySubject(subjectId);
+                setQuizData(quizInSubject);
             }
         }
-        fetchQuizData();
+        fetchQuizInSubject();
     }, [subjectId]);
 
     const handleQuizSelect = (quizId) => {
@@ -51,13 +53,14 @@ export default function CreateChapterComponent({ showModal, handleCloseModal, su
             let createConditions = {
                 subjectId: subjectId,
                 title: title,
+                createBy: userId,
             }
             if(key === 'tab1'){
-                createConditions = { ...createConditions, content: content, type: chapterType.LECTURE};
+                createConditions = { ...createConditions, content: content, attachments: '', quizzes: [], type: chapterType.LECTURE};
             } else if ( key === 'tab2'){
-                createConditions = { ...createConditions, attachments: youtubeLink, type: chapterType.VIDEO};
+                createConditions = { ...createConditions, content: '', attachments: youtubeLink, quizzes: [], type: chapterType.VIDEO};
             } else if ( key === 'tab3'){
-                createConditions = { ...createConditions, quizzes: selectedQuizzes, type: chapterType.QUIZ};
+                createConditions = { ...createConditions, content: '', attachments: '', quizzes: selectedQuizzes, type: chapterType.QUIZ};
             }
 
             Swal.fire({
@@ -113,14 +116,14 @@ export default function CreateChapterComponent({ showModal, handleCloseModal, su
                                     className="mb-3"
                                 >
                                     <Tab eventKey="tab1" title="Import Word">
-                                        <Form.Group className="mb-3">
+                                        {/* <Form.Group className="mb-3">
                                             <Form.Label>Upload Word File</Form.Label>
                                             <Form.Control
                                                 type="file"
                                                 accept=".doc,.docx"
                                                 onChange={(e) => setWordFile(e.target.files[0])}
                                             />
-                                        </Form.Group>
+                                        </Form.Group> */}
                                         <Form.Group className="mb-3">
                                             <Form.Label>Content</Form.Label>
                                             <Form.Control as="textarea" rows={6} onBlur={(e)=>setContent(e.target.value)} />

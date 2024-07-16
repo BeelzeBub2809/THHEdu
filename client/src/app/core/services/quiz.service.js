@@ -32,4 +32,11 @@ export class QuizService{
                 return response
             });
     }
+
+    static async getQuizByChapter(chapterId){
+        return await ApiService.get(UltisService.setUrlValueParams(api.getQuizByChapter, { chapterId: chapterId}))
+            .then((response) => {
+                return response
+            });
+    }
 }

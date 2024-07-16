@@ -60,7 +60,11 @@ export default function ListSubjectComponent(){
             }
 
             let data = await SubjectService.getAllSubjects(searchConditions);
-            setData(data.subjects);
+            if(data){
+                setData(data.subjects);
+            } else {
+                setData([]);
+            }
             setSize(data.pagination.size);
             setMaxPage(data.pagination.maxPage);
         }
@@ -108,7 +112,7 @@ export default function ListSubjectComponent(){
                         </tr>
                     </thead>
                     <tbody>
-                        {data.map((item) => (
+                        { data.length > 0 && data.map((item) => (
                         <tr key={item._id}>
                             <td>{item.subjectCode}</td>
                             <td>{item.subjectName}</td>
