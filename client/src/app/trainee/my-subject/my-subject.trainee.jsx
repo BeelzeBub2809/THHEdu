@@ -24,7 +24,7 @@ function MySubjectComponent(){
                         }
         
                         const data = await response.json()
-                        const allSubjectIds = data.flatMap(item => item.subjectId);
+                        const allSubjectIds = data.flatMap(item => item.subject);
                         const subjectsData = await Promise.all(allSubjectIds.map(async (id) => {
                             let response2 = await fetch(`http://localhost:9999/subject/${id}`, {
                                 method: 'GET',
@@ -69,7 +69,6 @@ function MySubjectComponent(){
             ) : (
                 <p>No subjects enrolled yet.</p>
             )}
-            <Button variant="primary">Show 8 more</Button>
         </Container>
     )
 }

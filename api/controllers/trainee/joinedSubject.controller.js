@@ -10,8 +10,8 @@ async function getAllJoinedSubjectById(req, res, next) {
 
 async function addJoinedSubject(req, res, next) {
   try {
-    const {traineeId, subjectId, learnedChapter} = req.body
-    const newJoinedSubject = await joinedSubjectRepo.addJoinedSubject({traineeId, subjectId, learnedChapter})
+    const {traineeId, subjectId} = req.body
+    const newJoinedSubject = await joinedSubjectRepo.addJoinedSubject({traineeId, subjectId})
     res.status(201).json(newJoinedSubject)
   } catch (error) {
     next(error)
