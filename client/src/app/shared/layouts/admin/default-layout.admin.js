@@ -4,6 +4,7 @@ import SidebarAdmin from './HeaderAndSidebar/sidebar.admin';
 import DashboardAdmin from '../../../admin/DashBoard/dashboard';
 import PageNotFound from '../../../error/page-not-found';
 import UserManagement from '../../../admin/user/userManage';
+import TransactionManagement from '../../../admin/transaction/transactionManagement';
 
 function DefaultLayoutAdmin() {
     return (
@@ -15,6 +16,7 @@ function DefaultLayoutAdmin() {
                     <Routes>
                         <Route path='/dashboard' element={<DashboardAdmin />} />
                         <Route path='/user' element={<UserManagement/>}/>
+                        <Route path='/transaction' element={<TransactionManagement/>}/>
                     </Routes>
                 </div>
             </div>

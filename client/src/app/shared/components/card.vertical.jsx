@@ -8,20 +8,20 @@ export default function CardVertical({ imgSrc, title, subjectName, price, textBu
         const fetchListSubject = async () => {
             try {
                 const traineeId = JSON.parse(localStorage.getItem('userId')) || ''
-            let response = await fetch(`http://localhost:9999/trainee/joinedSubject/get-by-id/${traineeId}`, {
-                method: 'GET',
-                credentials: 'include'
-            })
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Network response was not ok')
-            }
-            const data = await response.json()
-            if(data) {
-                let list = []
-                data.map(data => list.push(data.subject))
-                setListSubjects(list)
-            }
+                let response = await fetch(`http://localhost:9999/trainee/joinedSubject/get-by-id/${traineeId}`, {
+                    method: 'GET',
+                    credentials: 'include'
+                })
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Network response was not ok')
+                }
+                const data = await response.json()
+                if(data) {
+                    let list = []
+                    data.map(data => list.push(data.subject))
+                    setListSubjects(list)
+                }
             } catch (error) {
                 console.log(error) 
             }
@@ -76,12 +76,12 @@ export default function CardVertical({ imgSrc, title, subjectName, price, textBu
 
                     <Card.Text>Price: {price || 'Free'}</Card.Text>
                     
-                    <Link to = {`${link.trainee}${link.traineeSubjectDetail}/${subjectId}`}>
+                    <Link to = {`${link.trainee}${link.traineeSubjectDetail}/${subjectId}?price=${price}`}>
                         <Button className="button primary">
                             {textButton}
                         </Button>
                     </Link>
-                    {!listSubjects.includes(subjectId) && (
+                    {!listSubjects.includes(subjectId) && price == 0 && (
                         <Button style={{ marginLeft: '10px' }} className="button primary" onClick={handleAddJoinedSubject}>
                             Add to my subject
                         </Button>
