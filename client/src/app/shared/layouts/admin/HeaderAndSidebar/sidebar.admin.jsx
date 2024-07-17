@@ -35,6 +35,18 @@ export default function SidebarAdmin() {
         />
         <div className="sidebar-section-title">User</div>
       </Link>
+      <Link
+        to="/admin/transaction"
+        className={`sidebar-section ${activeSection === 'transaction' ? 'active' : ''}`}
+        onClick={() => handleSectionClick('transaction')}
+        style={{textDecoration: 'none', color:'black'}}
+      >
+        <img
+          src="https://cdn.builder.io/api/v1/image/assets/TEMP/f1170514c93b87b2f66d1a5f8546ed28c6542845d5b95a560fded4cc18694e75?apiKey=5dd4f9cda63a40ecb7fdb7955805b9bd&"
+          alt="Dashboard Icon"
+        />
+        <div className="sidebar-section-title">Transaction</div>
+      </Link>
     </aside>
   );
 }

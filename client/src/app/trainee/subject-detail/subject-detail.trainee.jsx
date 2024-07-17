@@ -1,18 +1,20 @@
 import { Col, Container, Row, Button} from 'react-bootstrap';
 import React, {useEffect, useState} from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import { link } from '../../core/constants/link';
 import { useNavigate } from 'react-router-dom';
 import { SubjectService } from '../../core/services/subject.service';
 
 function SubjectDetailComponent(){
     const navigation = useNavigate();
-
-    const { subjectId: subjectId } = useParams();
+    const location = useLocation();
+    const { subjectId } = useParams();
     // const [subject, setSubject] = useState(null);
     const [subjectDetail, setSubjectDetail] = useState('');
     const [isJoinedSubject, setIsJoinedSubject] = useState(true);
-
+    const queryParams = new URLSearchParams(location.search);
+    const price = queryParams.get('price');
+    const [listSubjects, setListSubjects] = useState([])
     const subject = {
         subjectId: subjectId,
         imgSrc: 'https://coreui.io/react/docs/static/react-83088efde08a5dedde9f67a954cb4b5b.jpg',
@@ -23,18 +25,65 @@ function SubjectDetailComponent(){
 
     useEffect( () => {
         async function fetchSubject(){
-            if(subjectId !== ''){
+            try {
                 const dataSubjectDetail = await SubjectService.getDetailSubject(subjectId);
                 setSubjectDetail(dataSubjectDetail);
+                const traineeId = JSON.parse(localStorage.getItem('userId')) || ''
+                let response = await fetch(`http://localhost:9999/trainee/joinedSubject/get-by-id/${traineeId}`, {
+                    method: 'GET',
+                    credentials: 'include'
+                })
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Network response was not ok')
+                }
+                const data = await response.json();
+                const list = data.map(item => item.subject);
+                setListSubjects(list);
+                console.log(price);
+                // Update isJoinedSubject based on updated listSubjects
+                if (price != 0) {
+                    setIsJoinedSubject(list.includes(subjectId));
+                } else {
+                    setIsJoinedSubject(true);
+                }
+            } catch (error) {
+                console.log(error);
             }
         }
         fetchSubject();
-    }, [subjectId]);
+    }, []);
 
-    const handleNavigateSubject = () => {
-        return isJoinedSubject 
-            ? navigation(`${link.trainee}${link.traineeLearnSubject}/${subjectId}`)
-            : navigation(`${link.trainee}${link.traineeLearnSubject}/${subjectId}`)
+    const handleNavigateSubject = async () => {
+        if(isJoinedSubject) {
+            navigation(`${link.trainee}${link.traineeLearnSubject}/${subjectId}`)
+        }else {
+            try {
+                const traineeId = JSON.parse(localStorage.getItem('userId')) || ''
+                let response = await fetch('http://localhost:9999/payment/create-payment-link', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        amount: price,
+                        userId : traineeId,
+                        subjectId: subjectId
+                    }),
+                    credentials: 'include'
+                })
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Network response was not ok')
+                }
+                const data = await response.json()
+                if(data) {
+                    window.location.href = data.payUrl
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
     }
     
     return (
