@@ -40,13 +40,9 @@ async function getChapterBySubject(req,res,next){
 async function updateChapter(req,res,next){
   try {
     const chapterId = req.params.chapterId;
-    const { title, type, content, attachments, quizzes, createBy } = req.body;
+    const { title, type, content, attachments, quizzes } = req.body;
 
-    if (!mongoose.Types.ObjectId.isValid(createBy)) {
-      return res.status(400).json({ message: 'Invalid user' });
-    }
-    console.log(createBy);
-    const updateSubject = await ChapterRepo.updateChapter({ chapterId, title, type, content, attachments, quizzes, createBy: createBy });
+    const updateSubject = await ChapterRepo.updateChapter({ chapterId, title, type, content, attachments, quizzes });
     res.status(201).json(updateSubject);
   } catch (error) {
     next(error)

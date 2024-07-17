@@ -82,6 +82,10 @@ function CreateQuizComponent({ showModal, handleCloseModal }) {
         setSearchString(e.target.value);
     };
 
+    async function createQuiz(createConditions){
+        await QuizService.createQuizBySubject(createConditions)
+    }
+
     const handleAddQuiz = (e) => {
         let formControl = new ValidatorsControl({
             subjectId: { value: selectedSubject, validators: Rules.requiredString},
@@ -97,22 +101,23 @@ function CreateQuizComponent({ showModal, handleCloseModal }) {
                 duration: duration,
                 questionId: selectedQuestion
             }
-            Swal.fire({
-                title: `Success request`,
-                icon: 'success',
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-                confirmButtonText: 'Ok',
-                preConfirm: async () => {
-                    await QuizService.createQuizBySubject(createConditions)
-                    .catch((error) => {
-                        Swal.showValidationMessage(`Request failed: ${error}`);
-                    });
-                },
-            }).then(() => {
+
+            try{
+                createQuiz(createConditions)
                 handleCloseModal();
                 window.location.reload();
-            })
+
+            } catch (error) {
+                Swal.fire({
+                    title: 'Error',
+                    text: error.message,
+                    icon: 'error',
+                    confirmButtonText: 'Ok'
+                }).then(()=>{
+                    handleCloseModal();
+                    window.location.reload();
+                })
+            }
         }
     }
 

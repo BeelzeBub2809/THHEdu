@@ -21,7 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 const PORT_CLIENT = process.env.PORT_CLIENT || 3000;
 app.use(cors({
-  origin: `http://localhost:${PORT_CLIENT}`,
+  origin: `http://${process.env.HOST_NAME}:${PORT_CLIENT}`,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true

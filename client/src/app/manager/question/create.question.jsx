@@ -150,7 +150,7 @@ function CreateQuestionComponent({ showModal, handleCloseModal }) {
             if(answers.length == 0 || !answers.some(a => a.isCorrected)){
                 return false;
             }
-            if(type === questionType.MAQ && answers.filter((a) => a.isCorrected).length >= 2){
+            if(type === questionType.MCQ && answers.filter((a) => a.isCorrected).length >= 2){
                 return false;
             }
         }

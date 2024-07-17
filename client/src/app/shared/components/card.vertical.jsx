@@ -1,27 +1,56 @@
 import { Card, Button } from 'react-bootstrap';
 import { Link } from "react-router-dom";
 import { link } from "../../core/constants/link"; 
+import { useEffect, useState } from 'react';
 export default function CardVertical({ imgSrc, title, subjectName, price, textButton, _id: subjectId}){
-    const handleAddJoinedSubject = async (subject,action)  => {
-        const traineeId = JSON.parse(localStorage.getItem('userId')) || ''
-        const formData = {
-            traineeId: traineeId,
-            subjectId: subjectId
-        }
-        let response = await fetch('http://localhost:9999/trainee/joinedSubject/create', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData),
-            credentials: 'include'
-        })
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Network response was not ok')
+    const [listSubjects, setListSubjects] = useState([])
+    useEffect(() => {
+        const fetchListSubject = async () => {
+            try {
+                const traineeId = JSON.parse(localStorage.getItem('userId')) || ''
+            let response = await fetch(`http://localhost:9999/trainee/joinedSubject/get-by-id/${traineeId}`, {
+                method: 'GET',
+                credentials: 'include'
+            })
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Network response was not ok')
             }
-        const data = await response.json()
-        console.log(data);
+            const data = await response.json()
+            if(data) {
+                let list = []
+                data.map(data => list.push(data.subject))
+                setListSubjects(list)
+            }
+            } catch (error) {
+                console.log(error) 
+            }
+        }
+        fetchListSubject()
+    }, [])
+    const handleAddJoinedSubject = async ()  => {
+        try {
+            const traineeId = JSON.parse(localStorage.getItem('userId')) || ''
+            const formData = {
+                traineeId: traineeId,
+                subjectId: subjectId
+            }
+            let response = await fetch('http://localhost:9999/trainee/joinedSubject/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+                credentials: 'include'
+            })
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Network response was not ok')
+            }
+            window.location.reload()
+        } catch (error) {
+            console.log(error)
+        }
     }
     return (
             <Card style={{ width: '18rem', height: '100%', margin: 20}}>
@@ -52,9 +81,11 @@ export default function CardVertical({ imgSrc, title, subjectName, price, textBu
                             {textButton}
                         </Button>
                     </Link>
-                    <Button style={{marginLeft: '10px'}} className="button primary" onClick={() => handleAddJoinedSubject(subjectId)}>
+                    {!listSubjects.includes(subjectId) && (
+                        <Button style={{ marginLeft: '10px' }} className="button primary" onClick={handleAddJoinedSubject}>
                             Add to my subject
-                    </Button>
+                        </Button>
+                    )}
                 </Card.Body>
             </Card>
     )
