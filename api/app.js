@@ -13,6 +13,8 @@ const QuestionRouter = require('./routes/question.router')
 const AuthRouter = require('./routes/auth/auth.route');
 const joinedSubjectRouter = require('./routes/trainee/joinedSubject.route');
 const SubmittedQuizRouter = require('./routes/submitted-quiz.routes');
+const momoRouter = require('./routes/payments/momo.route');
+const transactionRouter = require('./routes/admin/transaction.route');
 
 const app = express();
 app.use(logger('dev'));
@@ -27,14 +29,15 @@ app.use(cors({
   credentials: true
 }));
 app.use('/admin/user', UserRouter);
+app.use('/admin/transaction', transactionRouter);
 app.use('/subject', SubjectRouter);
 app.use('/quiz', QuizRouter);
 app.use('/chapter', ChapterRouter);
 app.use('/question', QuestionRouter);
 app.use('/submitted-quiz', SubmittedQuizRouter);
-
 app.use('/auth', AuthRouter);
 app.use('/trainee', joinedSubjectRouter)
+app.use('/payment', momoRouter)
 app.use((req, res, next) => {
   next(httpError(404, 'Not Found'));
 });
