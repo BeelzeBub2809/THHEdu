@@ -14,7 +14,19 @@ async function addJoinedSubject({traineeId, subjectId}) {
   return newJoinedSubject
 }
 
+async function markLearnedChapter({traineeId, subjectId, chapterId}){
+  const joinedSubject = await DbJoinedSubject.findOne({ traineeId: traineeId, subject: subjectId});
+
+  if(!joinedSubject.learnedChapter.includes(chapterId)){
+    await DbJoinedSubject.findOneAndUpdate(
+      { traineeId: traineeId, subject: subjectId},
+      { $push: { learnedChapter: chapterId } },
+    )
+  } else {
+  }
+}
+
 const joinedSubjectRepo = {
-  getAllJoinedSubjectById, addJoinedSubject
+  getAllJoinedSubjectById, addJoinedSubject, markLearnedChapter
 }
 module.exports = joinedSubjectRepo

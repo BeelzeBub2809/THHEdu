@@ -16,7 +16,7 @@ import { AuthService } from '../../core/services/auth.service';
 export default function QuestionPracticeScreen () {
     const navigation = useNavigate();
 
-    const { subjectId, quizId } = useParams();
+    const { subjectId, chapterId, quizId } = useParams();
     const [ questions, setQuestions ] = useState([]);
     const [activeQuestion, setActiveQuestion] = useState(0);
     const [currentQuestion, setCurrenQuestion] = useState();
@@ -82,6 +82,8 @@ export default function QuestionPracticeScreen () {
         let submitCondition = {
             quizId: quizId,
             choice: submittedQuiz.choice,
+            chapterId: chapterId,
+            subjectId: subjectId,
             traineeId: AuthService.getUserId(),         
         };
 
@@ -93,11 +95,9 @@ export default function QuestionPracticeScreen () {
                 text: error.message,
                 icon: 'error',
                 confirmButtonText: 'Ok'
-            }).then(()=>
-                navigation(`${link.trainee}${link.traineeLearnSubject}/${subjectId}`)
-            )
+            })
         }
-        navigation(`${link.trainee}${link.traineeLearnSubject}/${subjectId}`)
+        // navigation(`${link.trainee}${link.traineeLearnSubject}/${subjectId}`)
     }
     
 

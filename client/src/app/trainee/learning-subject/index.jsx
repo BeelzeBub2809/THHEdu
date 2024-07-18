@@ -21,7 +21,7 @@ function LearnSubjectComponent(){
     const [listChapters, setListChapters] = useState([]); 
     const [currentChapter, setCurrentChapter] = useState();
     const [learnedChapters, setLeanredChapters] = useState([]);
-    const [reFetchLearnedChapter, setReFetchLearnedChapter] = useState(true);
+    const [reFetchLearnedChapter, setReFetchLearnedChapter] = useState(0);
 
     useEffect( () => {
         async function fetchChapter(){
@@ -52,7 +52,7 @@ function LearnSubjectComponent(){
     }
 
     const handleStartQuiz = (_id) => {
-        navigation(`${link.trainee}${link.traineePracticeQuiz}/${subjectId}/${_id}`)
+        navigation(`${link.trainee}${link.traineePracticeQuiz}/${subjectId}/${currentChapter._id}/${_id}`)
     }
 
     const handleVideoProgress = (progress) => {
@@ -67,8 +67,12 @@ function LearnSubjectComponent(){
 
     const submitLearnedChapter = async () => {
         if( !learnedChapters.includes(currentChapter._id)){
-            await JoinedSubjectService.markLearnedChapter(AuthService.getUserId(), subjectId, currentChapter._id);
-            setReFetchLearnedChapter(prev => !prev);
+            try{
+                await JoinedSubjectService.markLearnedChapter(AuthService.getUserId(), subjectId, currentChapter._id);
+            }
+            catch (error) {
+            }
+            setReFetchLearnedChapter(prev => prev + 1);
         }
     }
 
@@ -128,22 +132,6 @@ function LearnSubjectComponent(){
     }
 
     const quizComponent =  () => {
-        //TODO:  change info when implement backend
-        // let userDetail = AuthService.getUserDetail();
-
-        //TODO:  change info when implement backend
-        // if( userDetail === null || userDetail === '' ){
-        //     return;
-        // }
-        
-        //TODO:  change info when implement backend
-        // let fetchCondition = {
-        //     userId: 1,
-        //     subjectId: 1,
-        //     _id: 1
-        // }
-        // call api
-        // let quizInfo =  await QuizService.getInfoQuiz(fetchCondition)
         return(
             <Container className="mt-5">
                 {
@@ -155,7 +143,7 @@ function LearnSubjectComponent(){
                                     <div className='d-flex justify-content-around'>
                                         <div>
                                             <h6>Receive grade</h6>
-                                            <p>To Pass <strong>80% or higher</strong></p>
+                                            <p>To Pass: <strong>{quiz.minMark}% or higher</strong></p>
                                             <p>Time <strong>{quiz.duration} minutes</strong></p>
                                         </div>
                                         <div className="text-center">

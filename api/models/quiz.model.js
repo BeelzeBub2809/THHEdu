@@ -5,6 +5,10 @@ const quizSchema = new Schema({
     type: String,
     required: true
   },
+  minMark:{
+    type: Number,
+    required: true,
+  },
   duration: {
     type: Number,
     required: true
