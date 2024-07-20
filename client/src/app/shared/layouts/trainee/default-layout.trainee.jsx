@@ -28,7 +28,7 @@ function DefaultLayoutTrainee(){
                         <Route path = {link.traineeDashboard} element = {<DashboardTraineePage/>}/>
                         <Route path = {`${link.traineeMySubject}/*`} element = {<MySubjectComponent/>}/>
                         <Route path = "/*" element = {<PageNotFound/>}/>
-                        <Route path = {`${link.traineePracticeQuiz}/:subjectId/:quizId`} element = {<QuestionPracticeScreen/>}/>
+                        <Route path = {`${link.traineePracticeQuiz}/:subjectId/:chapterId/:quizId`} element = {<QuestionPracticeScreen/>}/>
                         <Route path = {`${link.traineeSubjectDetail}/:subjectId`} element = {<SubjectDetailComponent/>}/>
                         <Route path = {`${link.traineeLearnSubject}/:subjectId`} element = {<LearnSubjectComponent/>}/>
                     </Routes>

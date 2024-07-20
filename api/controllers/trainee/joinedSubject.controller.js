@@ -1,8 +1,8 @@
 const DbJoinedSubject = require('../../models/joinedSubject.model.js')
-const joinedSubjectRepo = require('../../repositories/trainee/joinedSubject.repository.js')
+const JoinedSubjectRepo = require('../../repositories/trainee/joinedSubject.repository.js')
 async function getAllJoinedSubjectById(req, res, next) {
   try {
-    const listJoinedSubjects = await joinedSubjectRepo.getAllJoinedSubjectById(req.params.id)
+    const listJoinedSubjects = await JoinedSubjectRepo.getAllJoinedSubjectById(req.params.id)
     res.status(200).json(listJoinedSubjects)
   } catch (error) {
     next(error)
@@ -12,7 +12,7 @@ async function getAllJoinedSubjectById(req, res, next) {
 async function addJoinedSubject(req, res, next) {
   try {
     const {traineeId, subjectId} = req.body
-    const newJoinedSubject = await joinedSubjectRepo.addJoinedSubject({traineeId, subjectId})
+    const newJoinedSubject = await JoinedSubjectRepo.addJoinedSubject({traineeId, subjectId})
     res.status(201).json(newJoinedSubject)
   } catch (error) {
     next(error)
@@ -22,18 +22,11 @@ async function addJoinedSubject(req, res, next) {
 async function markLearnedChapter(req, res, next) {
   try {
     const {traineeId, subjectId, chapterId } = req.body;
-    console.log(traineeId, subjectId, chapterId);
-    const joinedSubject = await DbJoinedSubject.findOne({ traineeId: traineeId, subject: subjectId});
 
-    if(!joinedSubject.learnedChapter.includes(chapterId)){
-      const marLearnedChapter = await DbJoinedSubject.findOneAndUpdate(
-        { traineeId: traineeId, subject: subjectId},
-        { $push: { learnedChapter: chapterId } },
-      )
-      res.status(201).json(marLearnedChapter);
-    } else {
-      res.status(201)
-    }
+    let isMarked = await JoinedSubjectRepo.markLearnedChapter({traineeId, subjectId, chapterId});
+
+    res.status(201).json(isMarked);
+    
   } catch (error) {
     next(error)
   }

@@ -4,6 +4,10 @@ const submittedQuiz = new Schema({
   mark: {
     type: Number
   },
+  isPassed:{
+    type: Boolean,
+    required: true,
+  },
   choice: [{
     questionId: String,
     choicePerQuestion: []
@@ -18,6 +22,8 @@ const submittedQuiz = new Schema({
     required: true,
   },
   time: Number,
+},{
+  timestamps: true
 })
 const DbSubmittedQuiz = mongoose.model('SubmittedQuiz', submittedQuiz)
 module.exports = DbSubmittedQuiz
