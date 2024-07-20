@@ -11,12 +11,6 @@ const joinedSubjectSchema = new Schema({
     ref: 'Subject',
     required: true
   },
-  learnedChapter: [
-    {
-      type: Schema.ObjectId,
-      ref: 'Chapter'
-    }
-  ]
 },{
   timestamps: true
 })

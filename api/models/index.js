@@ -8,6 +8,7 @@ const DbSubject = require("./subject.model");
 const DbSubmittedAssignment = require("./submittedAssignment.model");
 const DbSubmittedQuiz = require("./submittedQuiz.model");
 const DbUser = require("./user.model");
+const DbChapterProgress = require('./chapterProgress.model');
 
 module.exports = {
   DbAssignment,
@@ -19,5 +20,6 @@ module.exports = {
   DbSubject,
   DbSubmittedAssignment,
   DbSubmittedQuiz,
-  DbUser
+  DbUser,
+  DbChapterProgress
 }

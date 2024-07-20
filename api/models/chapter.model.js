@@ -12,6 +12,9 @@ const chapterSchema = new Schema({
   attachments: {
     type: String
   },
+  linkVideo: {
+    type: String
+  },
   type: {
     type: Number,
     enum: [chapterType.LECTURE, chapterType.VIDEO, chapterType.QUIZ]
