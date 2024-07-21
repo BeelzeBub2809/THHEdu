@@ -2,9 +2,10 @@ import { React, useState, useEffect }  from 'react';
 import './css/create.css';
 import { Modal, Button, Tabs, Tab, Form, Row, Col } from 'react-bootstrap';
 import { QuizService } from '../../core/services/quiz.service';
+import { chapterType } from '../../core/constants/type';
 
 function ViewChapterComponent({ showModal, handleCloseModal, item }) {
-    const [key, setKey] = useState(0);
+    const [key, setKey] = useState(item.type);
     const [quizSearch, setQuizSearch] = useState('');
     const [quizData, setQuizData] = useState([])
     
@@ -23,17 +24,12 @@ function ViewChapterComponent({ showModal, handleCloseModal, item }) {
             }
         }
         fetchQuizData();
-        changeTab();
     }, [item]);
 
     const handleQuizSearch = (e) => {
         setQuizSearch(e.target.value);
     };
     
-    const changeTab = () => {
-        setKey(item.type)
-    }
-
     const filteredQuizzes = quizData.length > 0 && quizData.filter((quiz) =>
         quiz.quizName.toLowerCase().includes(quizSearch.toLowerCase())
     );
@@ -68,24 +64,24 @@ function ViewChapterComponent({ showModal, handleCloseModal, item }) {
                                                 <Form.Control as="textarea" rows={6} value={item.content} readOnly/>
                                             </Form.Group>
                                         </Tab>
-                                        <Tab eventKey={1} title="YouTube Video">
+                                        <Tab eventKey={1} title="Watching Video">
                                             <Form.Group className="mb-3">
-                                                <Form.Label>YouTube Link</Form.Label>
+                                                <Form.Label>Link Video</Form.Label>
                                                 <Form.Control
                                                     type="text"
                                                     readOnly
-                                                    value={item.attachments}
+                                                    value={item.linkVideo}
                                                 />
                                                 {
-                                                    item.attachments && (
+                                                    item.linkVideo && (
                                                         <div className="mt-3">
                                                             <iframe
                                                                 width="100%"
                                                                 height="315"
-                                                                src={`https://www.youtube.com/embed/${item.attachments.split('v=')[1]}`}
+                                                                src={`https://www.youtube.com/embed/${item.linkVideo.split('v=')[1]}`}
                                                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                                                 allowFullScreen
-                                                                title="YouTube video"
+                                                                title="Link video"
                                                             ></iframe>
                                                         </div>
                                                     )
