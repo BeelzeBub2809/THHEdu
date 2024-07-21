@@ -21,7 +21,7 @@ async function updateChapter({chapterId, ...updateCondition}){
                 title: updateCondition.title,
                 type: updateCondition.type,
                 content: updateCondition.content,
-                attachments: updateCondition.attachments,
+                linkVideo: updateCondition.linkVideo,
                 quizzes: updateCondition.quizzes,
             },
             $addToSet: {

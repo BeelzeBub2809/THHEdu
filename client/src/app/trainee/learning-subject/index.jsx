@@ -36,6 +36,7 @@ function LearnSubjectComponent(){
     useEffect( () => {
         async function fetchLearnedChapter(){
             if(subjectId){
+                //TODO: Need update after change database model
                 let learnedChapterData = await JoinedSubjectService.getLearnedChapterBySubject(AuthService.getUserId(), subjectId);
                 if( learnedChapterData){
                     setLeanredChapters(learnedChapterData);
@@ -123,7 +124,7 @@ function LearnSubjectComponent(){
         return(
             <Container className="mt-5">
                 <VideoPlaying
-                    url={currentChapter.attachments}  
+                    url={currentChapter.linkVideo}  
                     handleVideoProgress={handleVideoProgress}              
                 >
                 </VideoPlaying>

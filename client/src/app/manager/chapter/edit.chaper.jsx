@@ -9,13 +9,13 @@ import Swal from 'sweetalert2'
 import { ChapterService } from '../../core/services/chapter.service';
 
 function EditChapterComponent({ showModal, handleCloseModal, item, subjectId }) {
-    const [key, setKey] = useState(0);
+    const [key, setKey] = useState(chapterType.LECTURE);
     const [quizSearch, setQuizSearch] = useState('');
     const [quizData, setQuizData] = useState([])
 
     const [title, setTitle] = useState(item.title);
     const [content, setContent] = useState(item.content);
-    const [youtubeLink, setYoutubeLink] = useState(item.attachments);
+    const [youtubeLink, setYoutubeLink] = useState(item.linkVideo);
     const [selectedQuizzes, setSelectedQuizzes] = useState([]);
 
     useEffect( () => {
@@ -34,8 +34,12 @@ function EditChapterComponent({ showModal, handleCloseModal, item, subjectId }) 
                 setQuizData([]);
             }
         }
-        fetchQuizData();
-        changeTab();
+        
+        try{
+            fetchQuizData();
+            changeTab();
+        } catch (error) {
+        }
     }, [item]);
 
    
@@ -53,10 +57,6 @@ function EditChapterComponent({ showModal, handleCloseModal, item, subjectId }) 
             prev.includes(quizId) ? prev.filter((q) => q !== quizId) : [...prev, quizId]
         );
     };
-
-    async function editChapter(updateCondition){
-        await ChapterService.editChapter(item._id, updateCondition)
-    }
 
     const handleEditChapter = async (e) => {
         let formControl = new ValidatorsControl({
@@ -77,30 +77,42 @@ function EditChapterComponent({ showModal, handleCloseModal, item, subjectId }) 
             if(key === chapterType.LECTURE){
                 updateCondition = { ...updateCondition, content: content, type: chapterType.LECTURE, };
             } else if ( key === chapterType.VIDEO){
-                updateCondition = { ...updateCondition, attachments: youtubeLink, type: chapterType.VIDEO};
+                updateCondition = { ...updateCondition, linkVideo: youtubeLink, type: chapterType.VIDEO};
             } else if ( key === chapterType.QUIZ){
                 updateCondition = { ...updateCondition, quizzes: selectedQuizzes, type: chapterType.QUIZ};
             }
-            try{
-                editChapter(updateCondition)
-                handleCloseModal();
-                window.location.reload();
 
+            try{
+                Swal.fire({
+                    title: `Success request`,
+                    icon: 'success',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    confirmButtonText: 'Ok',
+                    preConfirm: async () => {
+                        await ChapterService.editChapter(item._id, updateCondition)
+                        .catch((error) => {
+                            Swal.showValidationMessage(`Request failed: ${error}`);
+                        });
+                    },
+                }).then(() => {
+                    handleCloseModal();
+                    window.location.reload();
+                })
             } catch (error) {
                 Swal.fire({
                     title: 'Error',
                     text: error.message,
                     icon: 'error',
                     confirmButtonText: 'Ok'
-                  }).then(()=>{
+                }).then(()=>{
                     handleCloseModal();
                     window.location.reload();
-                  })
+                })
             }
+            
         }
     }
-
-
 
     const handleQuizSearch = (e) => {
         setQuizSearch(e.target.value);
@@ -127,7 +139,7 @@ function EditChapterComponent({ showModal, handleCloseModal, item, subjectId }) 
                                     <Form.Group className="mb-3">
                                         <Form.Label>Chapter title</Form.Label>
                                         <Form.Control type="text"  onChange={(e)=>setTitle(e.target.value)} value={title}/>
-                                    <div validation="title" className="error-message" style={{ color: 'red' }} alias="Chapter title"></div>
+                                        <div validation="title" className="error-message" style={{ color: 'red' }} alias="Chapter title"></div>
                                     </Form.Group>
                                     <Tabs
                                         id="controlled-tab-example"
@@ -137,33 +149,33 @@ function EditChapterComponent({ showModal, handleCloseModal, item, subjectId }) 
                                     >
                                         <Tab eventKey={0} title="Content of lecture">
                                             <Form.Group className="mb-3">
-                                            <Form.Control as="textarea" rows={6} onChange={(e)=>setContent(e.target.value)} value={content}/>
-                                            <div validation="content" className="error-message" style={{ color: 'red' }} alias="Content"></div>
+                                                <Form.Control as="textarea" rows={6} onChange={(e)=>setContent(e.target.value)} value={content}/>
+                                                <div validation="content" className="error-message" style={{ color: 'red' }} alias="Content"></div>
                                             </Form.Group>
                                         </Tab>
-                                        <Tab eventKey={1} title="YouTube Video">
+                                        <Tab eventKey={1} title="Watching Video">
                                             <Form.Group className="mb-3">
-                                                <Form.Label>YouTube Link</Form.Label>
+                                                <Form.Label>Link video</Form.Label>
                                                 <Form.Control
                                                     type="text"
                                                     value={youtubeLink}
                                                     onChange={(e) => setYoutubeLink(e.target.value)}
                                                 />
                                                 {
-                                                    item && item.attachments && (
+                                                    item && item.linkVideo && (
                                                         <div className="mt-3">
                                                             <iframe
                                                                 width="100%"
                                                                 height="315"
-                                                                src={`https://www.youtube.com/embed/${item.attachments.split('v=')[1]}`}
+                                                                src={`https://www.youtube.com/embed/${youtubeLink.split('v=')[1]}`}
                                                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                                                 allowFullScreen
-                                                                title="YouTube video"
+                                                                title="Link video"
                                                             ></iframe>
                                                         </div>
                                                     )
                                                 }
-                                            <div validation="attachments" className="error-message" style={{ color: 'red' }} alias="Youtube link"></div>
+                                                <div validation="attachments" className="error-message" style={{ color: 'red' }} alias="Link video"></div>
                                             </Form.Group>
                                         </Tab>
                                         <Tab eventKey={2} title="Quizzes">

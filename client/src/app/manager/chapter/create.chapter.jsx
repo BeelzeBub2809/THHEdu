@@ -11,7 +11,7 @@ import { AuthService } from '../../core/services/auth.service';
 
 export default function CreateChapterComponent({ showModal, handleCloseModal, subjectId }) {
 
-    const [key, setKey] = useState('tab1');
+    const [key, setKey] = useState(chapterType.LECTURE);
     const [youtubeLink, setYoutubeLink] = useState('');
     const [selectedQuizzes, setSelectedQuizzes] = useState([]);
     const [quizSearch, setQuizSearch] = useState('');
@@ -42,9 +42,9 @@ export default function CreateChapterComponent({ showModal, handleCloseModal, su
         let formControl = new ValidatorsControl({
             title: { value: title, validators: Rules.title},
         })
-        if (key === 'tab1') {
+        if (key === chapterType.LECTURE) {
             formControl.setField('content', content, Rules.content);
-        } else if (key === 'tab2') {
+        } else if (key === chapterType.VIDEO) {
             formControl.setField('attachments', youtubeLink, Rules.youtubeLink);
         }
         
@@ -55,12 +55,12 @@ export default function CreateChapterComponent({ showModal, handleCloseModal, su
                 title: title,
                 createBy: userId,
             }
-            if(key === 'tab1'){
-                createConditions = { ...createConditions, content: content, attachments: '', quizzes: [], type: chapterType.LECTURE};
-            } else if ( key === 'tab2'){
-                createConditions = { ...createConditions, content: '', attachments: youtubeLink, quizzes: [], type: chapterType.VIDEO};
-            } else if ( key === 'tab3'){
-                createConditions = { ...createConditions, content: '', attachments: '', quizzes: selectedQuizzes, type: chapterType.QUIZ};
+            if(key === chapterType.LECTURE){
+                createConditions = { ...createConditions, content: content, attachments: '', linkVideo: '', quizzes: [], type: chapterType.LECTURE};
+            } else if ( key === chapterType.VIDEO){
+                createConditions = { ...createConditions, content: '', attachments: '', linkVideo: youtubeLink, quizzes: [], type: chapterType.VIDEO};
+            } else if ( key === chapterType.QUIZ){
+                createConditions = { ...createConditions, content: '', attachments: '', linkVideo: '',  quizzes: selectedQuizzes, type: chapterType.QUIZ};
             }
 
             Swal.fire({
@@ -115,7 +115,7 @@ export default function CreateChapterComponent({ showModal, handleCloseModal, su
                                     onSelect={(k) => setKey(k)}
                                     className="mb-3"
                                 >
-                                    <Tab eventKey="tab1" title="Import Word">
+                                    <Tab eventKey={0} title="Import Word">
                                         {/* <Form.Group className="mb-3">
                                             <Form.Label>Upload Word File</Form.Label>
                                             <Form.Control
@@ -130,9 +130,9 @@ export default function CreateChapterComponent({ showModal, handleCloseModal, su
                                             <div validation="content" className="error-message" style={{ color: 'red' }} alias="Content"></div>
                                         </Form.Group>
                                     </Tab>
-                                    <Tab eventKey="tab2" title="YouTube Video">
+                                    <Tab eventKey={1} title="Watching Video">
                                         <Form.Group className="mb-3">
-                                            <Form.Label>YouTube Link</Form.Label>
+                                            <Form.Label>Link video</Form.Label>
                                             <Form.Control
                                                 type="text"
                                                 value={youtubeLink}
@@ -147,7 +147,7 @@ export default function CreateChapterComponent({ showModal, handleCloseModal, su
                                                             src={`https://www.youtube.com/embed/${youtubeLink.split('v=')[1]}`}
                                                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                                             allowFullScreen
-                                                            title="YouTube video"
+                                                            title="Link video"
                                                         ></iframe>
                                                     </div>
                                                 )
@@ -155,7 +155,7 @@ export default function CreateChapterComponent({ showModal, handleCloseModal, su
                                             <div validation="attachments" className="error-message" style={{ color: 'red' }} alias="Youtube link"></div>
                                         </Form.Group>
                                     </Tab>
-                                    <Tab eventKey="tab3" title="Quizzes">
+                                    <Tab eventKey={2} title="Quizzes">
                                         <Form.Group className="mb-3">
                                             <Form.Label>Search Quizzes</Form.Label>
                                             <Form.Control
