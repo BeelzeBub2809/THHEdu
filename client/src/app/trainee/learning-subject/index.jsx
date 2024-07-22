@@ -12,6 +12,7 @@ import { MIN_TIME_LEARN_VIDEO } from '../../core/constants/config';
 import { theme } from '../../shared/styles/theme.style';
 import { ChapterService } from '../../core/services/chapter.service';
 import { JoinedSubjectService } from '../../core/services/joined-subject.service';
+import { ChapterProgressService } from '../../core/services/chapter-progress.service';
 
 function LearnSubjectComponent(){
     const navigation = useNavigate();
@@ -20,33 +21,35 @@ function LearnSubjectComponent(){
     const [isShowMenuChapter, setIsShowChaterList] = useState(true);
     const [listChapters, setListChapters] = useState([]); 
     const [currentChapter, setCurrentChapter] = useState();
-    const [learnedChapters, setLeanredChapters] = useState([]);
+    const [statusLearningChapters, setStatusLearningChapters] = useState([]);
     const [reFetchLearnedChapter, setReFetchLearnedChapter] = useState(0);
 
     useEffect( () => {
         async function fetchChapter(){
-            let dataChapterFetch = await ChapterService.getChaptersBySubject(subjectId);
-            setListChapters(dataChapterFetch);
-            setCurrentChapter(dataChapterFetch[0]);
+            if(subjectId){
+                let dataChapterFetch = await ChapterService.getChaptersBySubject(subjectId);
+                setListChapters(dataChapterFetch);
+                setCurrentChapter(dataChapterFetch[0]);
+            }
         }
         fetchChapter();
-    }, [subjectId]);
+    }, []);
 
 
     useEffect( () => {
         async function fetchLearnedChapter(){
             if(subjectId){
                 //TODO: Need update after change database model
-                let learnedChapterData = await JoinedSubjectService.getLearnedChapterBySubject(AuthService.getUserId(), subjectId);
-                if( learnedChapterData){
-                    setLeanredChapters(learnedChapterData);
+                let statusLearningChapters = await ChapterProgressService.getStatusLearningChapters(AuthService.getUserId(), subjectId);
+                if( statusLearningChapters){
+                    setStatusLearningChapters(statusLearningChapters);
                 } else {
-                    setLeanredChapters([]);
+                    setStatusLearningChapters([]);
                 }
             }
         }
         fetchLearnedChapter();
-    }, [reFetchLearnedChapter]);
+    }, [subjectId, reFetchLearnedChapter]);
 
     const handleSelectChapter = (_id) => {
         setCurrentChapter(listChapters.find(c => c._id === _id));
@@ -58,7 +61,7 @@ function LearnSubjectComponent(){
 
     const handleVideoProgress = (progress) => {
         if(progress.played*100 > MIN_TIME_LEARN_VIDEO){
-            submitLearnedChapter();
+            submitLearnedChapter(progress.played);
         }
     };
 
@@ -66,10 +69,17 @@ function LearnSubjectComponent(){
         submitLearnedChapter();
     }
 
-    const submitLearnedChapter = async () => {
-        if( !learnedChapters.includes(currentChapter._id)){
+    const submitLearnedChapter = async (videoProgress) => {
+        if( !statusLearningChapters.includes(currentChapter._id)){
             try{
-                await JoinedSubjectService.markLearnedChapter(AuthService.getUserId(), subjectId, currentChapter._id);
+                let markCondition = {
+                    traineeId: AuthService.getUserId(),
+                    chapterId: currentChapter._id,
+                }
+                if(currentChapter.type === chapterType.VIDEO){
+                    markCondition.videoProgress = videoProgress;
+                }
+                await ChapterProgressService.markStatusLearningChapter(markCondition);
             }
             catch (error) {
             }
@@ -85,7 +95,7 @@ function LearnSubjectComponent(){
                         return (
                             <div key={index} >
                                 <div className="btn btn-light w-100 text-start rounded-0 p-3 border-bottom d-flex"
-                                    style={{backgroundColor: learnedChapters.includes(chapter._id) ? theme.colors.successLight : ''}}
+                                    style={{backgroundColor: statusLearningChapters.includes(chapter._id) ? theme.colors.successLight : ''}}
                                     onClick={() => handleSelectChapter(chapter._id)}
                                 >
                                     <img src = {
@@ -111,7 +121,7 @@ function LearnSubjectComponent(){
                 }
                 <div className="text-center">
                     {
-                        !learnedChapters.includes(currentChapter._id) 
+                        !statusLearningChapters.includes(currentChapter._id) 
                             ? <Button onClick={()=>handleMarkCompleted()} variant="primary" size="lg">Mark Completed</Button>
                             : <Button disabled variant="primary" size="lg">Completed</Button>
                     }
@@ -202,24 +212,5 @@ const tempUrlIconDataTest = {
     quiz: '/assets/icons/quiz.svg',
     video: '/assets/icons/video.svg'
 }
-
-const quizInfoConstDataTest = [
-    {
-        quizId: 1,
-        quizName: 'Quiz 1',
-        totalQuestion: 20,
-        duration: 60,
-        isActive: true,
-        createdBy: 'FPT'
-    },   
-    {
-        quizId: 2,
-        quizName: 'Quiz 2',
-        totalQuestion: 10,
-        duration: 30,
-        isActive: true,
-        createdBy: 'NNN'
-    }
-]
 
 export default LearnSubjectComponent;

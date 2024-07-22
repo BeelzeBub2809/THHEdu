@@ -6,11 +6,11 @@ const joinedSubjectSchema = new Schema({
     ref: 'User',
     required: true
   },
-  subject: {
+  subject: [{
     type: Schema.ObjectId,
     ref: 'Subject',
     required: true
-  },
+  }],
 },{
   timestamps: true
 })

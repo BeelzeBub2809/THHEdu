@@ -37,7 +37,7 @@ async function getLearnedChapterBySubject(req, res, next) {
     const traineeId = req.params.traineeId;
     const subjectId = req.params.subjectId;
 
-    const newJoinedSubject = await DbJoinedSubject.findOne({traineeId: traineeId, subject: subjectId})
+    const newJoinedSubject = await DbJoinedSubject.findOne({traineeId: traineeId, subject: subjectId});
     res.status(201).json(newJoinedSubject.learnedChapter)
   } catch (error) {
     next(error)
