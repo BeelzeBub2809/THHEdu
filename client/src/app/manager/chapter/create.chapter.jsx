@@ -55,11 +55,11 @@ export default function CreateChapterComponent({ showModal, handleCloseModal, su
                 title: title,
                 createBy: userId,
             }
-            if(key === chapterType.LECTURE){
+            if(key == chapterType.LECTURE){
                 createConditions = { ...createConditions, content: content, attachments: '', linkVideo: '', quizzes: [], type: chapterType.LECTURE};
-            } else if ( key === chapterType.VIDEO){
+            } else if ( key == chapterType.VIDEO){
                 createConditions = { ...createConditions, content: '', attachments: '', linkVideo: youtubeLink, quizzes: [], type: chapterType.VIDEO};
-            } else if ( key === chapterType.QUIZ){
+            } else if ( key == chapterType.QUIZ){
                 createConditions = { ...createConditions, content: '', attachments: '', linkVideo: '',  quizzes: selectedQuizzes, type: chapterType.QUIZ};
             }
 
@@ -115,7 +115,7 @@ export default function CreateChapterComponent({ showModal, handleCloseModal, su
                                     onSelect={(k) => setKey(k)}
                                     className="mb-3"
                                 >
-                                    <Tab eventKey={0} title="Import Word">
+                                    <Tab eventKey={chapterType.LECTURE} title="Import Word">
                                         {/* <Form.Group className="mb-3">
                                             <Form.Label>Upload Word File</Form.Label>
                                             <Form.Control
@@ -130,7 +130,7 @@ export default function CreateChapterComponent({ showModal, handleCloseModal, su
                                             <div validation="content" className="error-message" style={{ color: 'red' }} alias="Content"></div>
                                         </Form.Group>
                                     </Tab>
-                                    <Tab eventKey={1} title="Watching Video">
+                                    <Tab eventKey={chapterType.VIDEO} title="Watching Video">
                                         <Form.Group className="mb-3">
                                             <Form.Label>Link video</Form.Label>
                                             <Form.Control
@@ -155,7 +155,7 @@ export default function CreateChapterComponent({ showModal, handleCloseModal, su
                                             <div validation="attachments" className="error-message" style={{ color: 'red' }} alias="Youtube link"></div>
                                         </Form.Group>
                                     </Tab>
-                                    <Tab eventKey={2} title="Quizzes">
+                                    <Tab eventKey={chapterType.QUIZ} title="Quizzes">
                                         <Form.Group className="mb-3">
                                             <Form.Label>Search Quizzes</Form.Label>
                                             <Form.Control

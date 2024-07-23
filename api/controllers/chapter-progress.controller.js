@@ -1,6 +1,6 @@
 const { chapterType } = require('../constants/types.js');
 const { DbChapterProgress, DbJoinedSubject, DbSubject, DbChapter } = require('../models/index.js')
-const mongoose = require('mongoose')
+const ChapterProgressRepo = require('../repositories/chapter-progress.repository.js');
 
 async function getStatusLearningChapters(req,res,next){
   try {
@@ -41,18 +41,22 @@ async function markStatusLearningChapter(req,res,next){
     });
 
     if(!chapterProgress){
-      let newChapterProgress;
-      if(markCondition.type === chapterType.QUIZ){
-        
-      } else {
-        newChapterProgress = {
-          trainee: markCondition.traineeId,
-          chapter: markCondition.chapterId,
-          isCompleted: true,
-          videoProgress: markCondition.videoProgress,
-        }
+      let response;
+
+      if(markCondition.type == chapterType.LECTURE){
+        response = await ChapterProgressRepo.createChapterProgress(markCondition.traineeId, markCondition.chapterId)
+      } else if (markCondition.type == chapterType.VIDEO) {
+        response = await ChapterProgressRepo.createChapterProgress(markCondition.traineeId, markCondition.chapterId, markCondition.videoProgress)
+      } else if (markCondition.type == chapterType.QUIZ){
+
       }
+
+      res.status(201).json(response);
     } else {
+      if( markCondition.type == chapterType.VIDEO){
+        const response = await ChapterProgressRepo.updateTimeVideo(markCondition.traineeId, markCondition.chapterId, markCondition.videoProgress)
+        res.status(201).json(response)
+      }
     }
   } catch (error) {
     next(error)

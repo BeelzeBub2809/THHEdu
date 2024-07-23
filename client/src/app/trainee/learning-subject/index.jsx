@@ -41,6 +41,7 @@ function LearnSubjectComponent(){
             if(subjectId){
                 //TODO: Need update after change database model
                 let statusLearningChapters = await ChapterProgressService.getStatusLearningChapters(AuthService.getUserId(), subjectId);
+                console.log(statusLearningChapters);
                 if( statusLearningChapters){
                     setStatusLearningChapters(statusLearningChapters);
                 } else {
@@ -75,10 +76,12 @@ function LearnSubjectComponent(){
                 let markCondition = {
                     traineeId: AuthService.getUserId(),
                     chapterId: currentChapter._id,
+                    type: currentChapter.type
                 }
-                if(currentChapter.type === chapterType.VIDEO){
+                if(currentChapter.type == chapterType.VIDEO){
                     markCondition.videoProgress = videoProgress;
                 }
+                console.log(markCondition);
                 await ChapterProgressService.markStatusLearningChapter(markCondition);
             }
             catch (error) {
@@ -95,7 +98,7 @@ function LearnSubjectComponent(){
                         return (
                             <div key={index} >
                                 <div className="btn btn-light w-100 text-start rounded-0 p-3 border-bottom d-flex"
-                                    style={{backgroundColor: statusLearningChapters.includes(chapter._id) ? theme.colors.successLight : ''}}
+                                    style={{backgroundColor: statusLearningChapters.filter(s => s.chapter == chapter._id)[0]?.isCompleted ? theme.colors.successLight : ''}}
                                     onClick={() => handleSelectChapter(chapter._id)}
                                 >
                                     <img src = {
