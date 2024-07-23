@@ -25,8 +25,9 @@ async function createQuizBySubject(req,res,next){
         return res.status(400).json({ message: 'Invalid quiz'});
       }
       
-      const { chapterId, quizName, duration, questionId } = req.body;
-      const newQuiz = await DbQuiz.create({subjectId, chapterId, quizName, duration, questionId})
+      //TODO: Add minMark for input from frontend
+      const { chapterId, quizName, duration, questionId, minMark = 80 } = req.body;
+      const newQuiz = await DbQuiz.create({subjectId, chapterId, quizName, duration, questionId, minMark})
       
       res.status(201).json(newQuiz);
     } catch (error) {

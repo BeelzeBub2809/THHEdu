@@ -26,5 +26,8 @@ export const api = {
     submitQuiz: '/submitted-quiz/submit',
 
     markLearnedChapter: '/trainee/joined-subject/mark-learned-chapter',
-    getLearnedChapterBySubject: '/trainee/joined-subject/learned-subject/:traineeId/:subjectId'
+    getLearnedChapterBySubject: '/trainee/joined-subject/learned-subject/:traineeId/:subjectId',
+
+    getStatusLearningChapter: '/chapter-progress/status-learning-chapter/:traineeId/:subjectId',
+    markStatusLearningChapter: '/chapter-progress/mark-status'
 };

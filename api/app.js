@@ -15,6 +15,7 @@ const joinedSubjectRouter = require('./routes/trainee/joinedSubject.route');
 const SubmittedQuizRouter = require('./routes/submitted-quiz.routes');
 const momoRouter = require('./routes/payments/momo.route');
 const transactionRouter = require('./routes/admin/transaction.route');
+const ChapterProgressRouter = require('./routes/chapter-progress.router');
 
 const app = express();
 app.use(logger('dev'));
@@ -38,6 +39,8 @@ app.use('/submitted-quiz', SubmittedQuizRouter);
 app.use('/auth', AuthRouter);
 app.use('/trainee', joinedSubjectRouter)
 app.use('/payment', momoRouter)
+app.use('/chapter-progress', ChapterProgressRouter)
+
 app.use((req, res, next) => {
   next(httpError(404, 'Not Found'));
 });
